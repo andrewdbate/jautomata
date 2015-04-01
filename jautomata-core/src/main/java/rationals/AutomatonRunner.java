@@ -22,7 +22,6 @@ package rationals;
  * This interface essentially provide a way to communicate with {@link AutomatonRunListener}
  * objects for notifying run events
  * 
- * @author nono
  * @version $Id: AutomatonRunner.java 2 2006-08-24 14:41:48Z oqube $
  */
 public interface AutomatonRunner {

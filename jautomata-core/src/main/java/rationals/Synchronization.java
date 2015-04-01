@@ -25,7 +25,6 @@ import java.util.Set;
  * and allows various strategies of synchronization between transitions
  * of two automata.
  * 
- * @author nono
  * @version $Id: Synchronization.java 2 2006-08-24 14:41:48Z oqube $
  */
 public interface Synchronization<L> {

@@ -49,7 +49,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 	 * @see rationals.Synchronization
 	 */
 	public Mix() {
-		this.synchronization = new DefaultSynchronization();
+		this.synchronization = new DefaultSynchronization<>();
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 	 * @param synch
 	 *            a Synchronization object. Must not be null.
 	 */
-	public Mix(Synchronization synch) {
+	public Mix(Synchronization<L> synch) {
 		this.synchronization = synch;
 	}
 
@@ -70,7 +70,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 	 * , rationals.Automaton)
 	 */
 	public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b) {
-		Automaton<L, Tr, T> ret = new Automaton();
+		Automaton<L, Tr, T> ret = new Automaton<L, Tr, T>();
 		// FIXME: Potentially unsafe cast, but adding generics reveals an inconsistency in the APIs 
 		ret.setBuilder((T) new TransitionBuilder<L>());
 		return transformTo(a, b, ret);
@@ -86,12 +86,11 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 	 *         transformation.
 	 */
 	public Automaton<L, Tr, T> transformTo(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b, Automaton<L, Tr, T> ret) {
-		Set alph = synchronization.synchronizable(a.alphabet(), b.alphabet());
+		Set<L> alph = synchronization.synchronizable(a.alphabet(), b.alphabet());
 		/* check alphabets */
-		Map<StatesCouple, State> amap = new HashMap();
-		Map<StatesCouple, State> bmap = new HashMap();
-		List<StatesCouple> todo = new ArrayList();
-		Set<StatesCouple> done = new HashSet();
+		Map<StatesCouple, State> amap = new HashMap<>();
+		List<StatesCouple> todo = new ArrayList<>();
+		Set<StatesCouple> done = new HashSet<>();
 		Set<State> as = TransformationsToolBox.epsilonClosure(a.initials(), a);
 		Set<State> bs = TransformationsToolBox.epsilonClosure(b.initials(), b);
 		State from = ret.addState(true, TransformationsToolBox
@@ -110,7 +109,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 			Map<L, Set<State>> tam = TransformationsToolBox.mapAlphabet(a.delta(couple.sa), a);
 			Map<L, Set<State>> tbm = TransformationsToolBox.mapAlphabet(b.delta(couple.sb), b);
 			/* create label map for synchronized trans */
-			Map<L, StatesCouple> tcm = new HashMap();
+			Map<L, StatesCouple> tcm = new HashMap<>();
 			/* unsynchronizable transitions in A */
 			for (Iterator<Map.Entry<L, Set<State>>> i = tam.entrySet().iterator(); i.hasNext();) {
 				Map.Entry<L, Set<State>> me = i.next();
