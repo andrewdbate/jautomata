@@ -22,7 +22,6 @@ import rationals.Transition;
 import rationals.transformations.Complement;
 import rationals.transformations.Mix;
 import rationals.transformations.Pruner;
-import rationals.transformations.ToDFA;
 
 /**
  * This class implements a basic model-checking algorithm.
@@ -44,7 +43,7 @@ import rationals.transformations.ToDFA;
  */
 public class ModelCheck<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements BinaryTest<L, Tr, T> {
 
-    private Automaton<L, Tr, T> cex;
+    private Automaton<L, Tr, T> counterExamples;
 
     /*
      * (non-Javadoc)
@@ -53,11 +52,9 @@ public class ModelCheck<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
      *      rationals.Automaton)
      */
     public boolean test(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b) {
-    	Automaton<L, Tr, T> aDFA = new ToDFA<L, Tr, T>().transform(a);
-    	Automaton<L, Tr, T> bDFA = new ToDFA<L, Tr, T>().transform(b);
-        Automaton<L, Tr, T> caDFA = new Complement<L, Tr, T>().transform(aDFA);
-        cex = new Pruner<L, Tr, T>().transform(new Mix<L, Tr, T>().transform(caDFA, bDFA));
-        if (new isEmpty<L, Tr, T>().test(cex))
+        Automaton<L, Tr, T> ca = new Complement<L, Tr, T>().transform(a);
+        counterExamples = new Pruner<L, Tr, T>().transform(new Mix<L, Tr, T>().transform(ca, b));
+        if (new isEmpty<L, Tr, T>().test(counterExamples))
             return true;
         else
             return false;
@@ -71,6 +68,6 @@ public class ModelCheck<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
      *         been called yet.
      */
     public Automaton<L, Tr, T> counterExamples() {
-        return cex;
+        return counterExamples;
     }
 }

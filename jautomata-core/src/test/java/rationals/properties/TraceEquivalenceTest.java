@@ -20,9 +20,9 @@ import junit.framework.TestCase;
 import rationals.Automaton;
 import rationals.State;
 import rationals.Transition;
+import rationals.TransitionBuilder;
 
 /**
- * @author nono
  * @version $Id: TraceEquivalenceTest.java 2 2006-08-24 14:41:48Z oqube $
  */
 public class TraceEquivalenceTest extends TestCase {
@@ -40,21 +40,21 @@ public class TraceEquivalenceTest extends TestCase {
      * simple trace equivalence test
      */
     public void testTraceEq() throws Throwable {
-        Automaton a = new Automaton();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Automaton<>();
         State a1 = a.addState(true, false);
         State a2 = a.addState(false, true);
         State a3 = a.addState(false, true);
-        a.addTransition(new Transition(a1, "a", a2));
-        a.addTransition(new Transition(a1, "a", a3));
-        a.addTransition(new Transition(a2, "b", a3));
-        a.addTransition(new Transition(a3, "b", a2));
-        Automaton b = new Automaton();
+        a.addTransition(new Transition<>(a1, "a", a2));
+        a.addTransition(new Transition<>(a1, "a", a3));
+        a.addTransition(new Transition<>(a2, "b", a3));
+        a.addTransition(new Transition<>(a3, "b", a2));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Automaton<>();
         State b1 = b.addState(true, false);
         State b2 = b.addState(false, true);
-        b.addTransition(new Transition(b1, "a", b2));
-        b.addTransition(new Transition(b2, "b", b2));
-        TraceEquivalence equiv = new TraceEquivalence();
-        AreEquivalent eq = new AreEquivalent(equiv);
+        b.addTransition(new Transition<>(b1, "a", b2));
+        b.addTransition(new Transition<>(b2, "b", b2));
+        TraceEquivalence<String, Transition<String>, TransitionBuilder<String>> equiv = new TraceEquivalence<>();
+        AreEquivalent<String, Transition<String>, TransitionBuilder<String>> eq = new AreEquivalent<>(equiv);
         assertTrue(eq.test(a, b));
     }
 

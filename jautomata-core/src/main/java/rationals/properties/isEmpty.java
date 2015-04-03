@@ -21,17 +21,11 @@ import rationals.Builder;
 import rationals.State;
 import rationals.Transition;
 
-import java.util.Iterator;
-
-
 public class isEmpty<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTest<L, Tr, T> {
 	
   public boolean test(Automaton<L, Tr, T> a) {
-    Iterator<State> i = a.accessibleStates().iterator() ;
-    while (i.hasNext()) {
-      if (i.next().isTerminal()) return false ;
-    }
-    return true ;
+    for (State s: a.accessibleStates()) if (s.isTerminal()) return false;
+    return true;
   }
   
 }

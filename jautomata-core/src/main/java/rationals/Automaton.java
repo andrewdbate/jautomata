@@ -26,7 +26,7 @@ import java.util.*;
  * This class defines the notion of automaton. Following notations are used to
  * describe this class.
  * <p>
- * An automaton is a 5-uple <em>A = (X , Q , I , T , D)</em> where
+ * An automaton is a 5-tuple <em>A = (X , Q , I , T , D)</em> where
  * <ul>
  * <li><em>X</em> is a finite set of labels named alphabet ,
  * <li><em>Q</em> is a finite set of states,
@@ -40,7 +40,7 @@ import java.util.*;
  * the symbol <em>@</em>.
  * <p>
  * In this implementation of automaton, any object may be a label, states are
- * instance of class <tt>State</tt> and transitions are intances of class
+ * instance of class <tt>State</tt> and transitions are instances of class
  * <tt>Transition</tt>. Only automata should create instances of states through
  * <tt>Automaton</tt> method <tt>newState</tt>.
  * 

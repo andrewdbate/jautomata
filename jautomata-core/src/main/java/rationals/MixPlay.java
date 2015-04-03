@@ -24,8 +24,6 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * WARNING: this class is only partially implemented and may return incorrect results. 
- * 
  * This class implements an algorithm for finding a synchronizing
  * word given a target letter.
  * 
@@ -204,9 +202,6 @@ public class MixPlay<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> i
                 /* check synchronization */
                 if (!checkSynchronizableWith(tr.label(), states))
                     continue;
-                /* check early rejection */
-                if (!checkAccessibleWith(tr.label(), states))
-                    continue;
                 /* ok - try this transition */
                 StatesTuple tup = advanceWith(tr.label(), states);
                 /* recurse - an exception is thrown if a match is found */
@@ -250,19 +245,6 @@ public class MixPlay<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> i
                 return false;
         }
         return true;
-    }
-
-    /**
-     * Checks that, if object is in the alphabet of an automaton, firing of
-     * transition does not preclude access of target
-     * 
-     * @param object
-     * @param states
-     * @return
-     */
-    private boolean checkAccessibleWith(L object, StatesTuple states) {
-    	//throw new UnsupportedOperationException("Not implemented yet");
-    	return true;
     }
 
     /**

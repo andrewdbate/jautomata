@@ -16,29 +16,86 @@
  */
 package rationals.properties;
 
+import java.util.Arrays;
+
 import junit.framework.TestCase;
 import rationals.Automaton;
+import rationals.NoSuchStateException;
+import rationals.State;
+import rationals.Transition;
+import rationals.TransitionBuilder;
 import rationals.converters.ConverterException;
 import rationals.converters.Expression;
+import rationals.transformations.Complement;
 
 /**
- * @author nono
  * @version $Id: ModelCheckTest.java 2 2006-08-24 14:41:48Z oqube $
  */
 public class ModelCheckTest extends TestCase {
 
-    /**
-     * @param arg0
-     */
     public ModelCheckTest(String arg0) {
         super(arg0);
     }
     
     public void test() throws ConverterException {
-        Automaton a = new Expression().fromString("a(b+c)(ab)*");
-        Automaton b = new Expression().fromString("(a+b)*c");
-        ModelCheck mc = new ModelCheck();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a(b+c)(ab)*");
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("(a+b)*c");
+        ModelCheck<String, Transition<String>, TransitionBuilder<String>> mc = new ModelCheck<>();
         assertFalse(mc.test(b,a));
-        System.err.println(mc.counterExamples());
+        //System.err.println(mc.counterExamples());
     }
+    
+	public void testEquivalence() throws NoSuchStateException {
+		Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Automaton<>();
+		State initialA = a.addState(true,false);
+		State finalA = a.addState(false,true);
+		a.addTransition(new Transition<>(initialA, "a", finalA));
+		a.addTransition(new Transition<>(initialA, "b", finalA));
+		a.addTransition(new Transition<>(initialA, "c", initialA));
+		a.addTransition(new Transition<>(finalA,   "d", finalA));
+		Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Automaton<>();
+		State initialB = b.addState(true,false);
+		State finalB = b.addState(false,true);
+		b.addTransition(new Transition<>(initialB, "a", finalB));
+		b.addTransition(new Transition<>(initialB, "b", finalB));
+		b.addTransition(new Transition<>(finalB,   "d", finalB));
+		ModelCheck<String, Transition<String>, TransitionBuilder<String>> mc = new ModelCheck<>();
+		assertFalse(mc.test(a,b) && mc.test(b,a));
+	}
+	
+	public void testComplement1() throws NoSuchStateException {
+		Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Automaton<>();
+		State initialA = a.addState(true,false);
+		State finalA = a.addState(false,true);
+		a.addTransition(new Transition<>(initialA, "a", finalA));
+		a.addTransition(new Transition<>(initialA, "b", finalA));
+		a.addTransition(new Transition<>(initialA, "c", initialA));
+		a.addTransition(new Transition<>(finalA,   "d", finalA));
+		
+		Automaton<String, Transition<String>, TransitionBuilder<String>> aComplement = new Complement<String, Transition<String>, TransitionBuilder<String>>().transform(a);
+		
+		assertTrue(aComplement.accept(Arrays.asList("d")));
+		assertTrue(aComplement.accept(Arrays.asList("a", "b", "c")));
+		assertTrue(aComplement.accept(Arrays.asList("a", "b", "d", "c")));
+		assertTrue(aComplement.accept(Arrays.asList("a", "b", "d", "d", "c")));
+	}
+	
+	public void testComplement2() throws NoSuchStateException {
+		Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Automaton<>();
+		State initialB = b.addState(true,false);
+		State finalB = b.addState(false,true);
+		b.addTransition(new Transition<>(initialB, "a", finalB));
+		b.addTransition(new Transition<>(initialB, "b", finalB));
+		b.addTransition(new Transition<>(finalB,   "d", finalB));
+		
+		Automaton<String, Transition<String>, TransitionBuilder<String>> bComplement = new Complement<String, Transition<String>, TransitionBuilder<String>>().transform(b);
+			
+		assertTrue(bComplement.accept(Arrays.asList("d")));
+		assertTrue(bComplement.accept(Arrays.asList("a", "b", "a")));
+		assertTrue(bComplement.accept(Arrays.asList("a", "b", "d", "a")));
+		assertTrue(bComplement.accept(Arrays.asList("a", "b", "d", "d", "b")));
+	}
+	
+	// TODO: add tests for the product operator (called the Mix product here)
+	
 }

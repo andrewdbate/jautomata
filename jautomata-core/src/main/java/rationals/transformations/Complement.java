@@ -16,13 +16,8 @@
  */
 package rationals.transformations;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import rationals.Automaton;
 import rationals.Builder;
@@ -32,12 +27,9 @@ import rationals.Transition;
 
 /**
  * A transformation that computes the complement of an automaton.
- * <p>
- * This transformation computes the complement of an automaton: Terminal states
- * are inverted and missing transitions are added.
  * 
- * @author nono
- * @version $Id: Complement.java 2 2006-08-24 14:41:48Z oqube $
+ * This transformation computes the complement of an automaton: The automaton is first converted to a DFA (if it is not
+ * already a DFA), and the set of final states becomes the entire set of states minus the original set of final states.
  */
 public class Complement<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTransformation<L, Tr, T> {
 
@@ -47,47 +39,21 @@ public class Complement<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
      * @see rationals.transformations.UnaryTransformation#transform(rationals.Automaton)
      */
     public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a) {
-        Automaton<L, Tr, T> ret = new Automaton<>();
-        List<State> todo = new ArrayList<>();
-        Map<State, State> sm = new HashMap<>();
-        Set<State> done = new HashSet<>();
-        Set<State> s = a.initials();
-        todo.addAll(s);
-        while (!todo.isEmpty()) {
-            State st = todo.remove(0);
-            State ns = sm.get(st);
-            if (ns == null) {
-                ns = ret.addState(st.isInitial(), !st.isTerminal());
-                sm.put(st, ns);
-            }
-            done.add(st);
-            for (Iterator<L> it = a.alphabet().iterator(); it.hasNext();) {
-                L l = it.next();
-                Set<Transition<L>> ends = a.delta(st, l);
-                if (ends.isEmpty())
-                    try {
-                        ret.addTransition(new Transition<>(ns, l, ns));
-                    } catch (NoSuchStateException e) {
-                    }
-                else {
-                    for (Iterator<Transition<L>> i = ends.iterator(); i.hasNext();) {
-                        State end = i.next().end();
-                        State ne = sm.get(end);
-                        if (ne == null) {
-                            ne = ret.addState(end.isInitial(), !end.isTerminal());
-                            sm.put(end, ne);
-                            todo.add(end);
-                        }
-                        try {
-                            ret.addTransition(new Transition<>(ns, l, ne));
-                        } catch (NoSuchStateException e) {
-                        }
-                    }
-                }
-
-            }
-        }
-        return ret;
+    	Automaton<L, Tr, T> complement = new SinkComplete<L, Tr, T>().transform(new ToDFA<L, Tr, T>().transform(a));
+    	Map<State, State> map = new HashMap<>();
+    	Automaton<L, Tr, T> result = new Automaton<>();
+    	for (State s : complement.states()) {
+    		State newState = result.addState(s.isInitial(), !s.isTerminal());
+    		map.put(s, newState);
+    	}
+    	for (Transition<L> t : complement.delta()) {
+    		try {
+				result.addTransition(new Transition<>(map.get(t.start()), t.label(), map.get(t.end())));
+			} catch (NoSuchStateException e) {
+				throw new Error(e);
+			}
+    	}
+        return result;
     }
 
 }

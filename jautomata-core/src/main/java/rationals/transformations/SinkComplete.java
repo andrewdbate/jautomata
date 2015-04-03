@@ -17,6 +17,7 @@
 package rationals.transformations;
 
 import rationals.Automaton;
+import rationals.Builder;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
@@ -35,55 +36,56 @@ import java.util.Set;
  * <li>D(C) = D(A) U { (s1,a,sink)) | not exists (s1,a,s2) in D(A) }</li>
  * </ul>
  * 
- * @author nono
  * @version $Id: SinkComplete.java 6 2006-08-30 08:56:44Z oqube $
  */
-public class SinkComplete implements UnaryTransformation {
+public class SinkComplete<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTransformation<L, Tr, T> {
 
-  private Set alphabet;
+	private Set<L> alphabet;
 
-  public SinkComplete(Set alphabet) {
-    this.alphabet = alphabet;
-  }
-
-  public SinkComplete() {
-  }
-
-    /*
-     *  (non-Javadoc)
-     * @see rationals.transformations.UnaryTransformation#transform(rationals.Automaton)
-     */
-    public Automaton transform(Automaton a) {
-      Automaton b = (Automaton) a.clone();
-      Set alph = (alphabet == null) ? b.alphabet() : alphabet;
-      State hole = null;
-      Set states = b.getStateFactory().stateSet();
-      states.addAll(b.states());
-      Iterator i = states.iterator();
-      while (i.hasNext()) {
-	State e = (State) i.next();
-	Iterator j = alph.iterator();
-	while (j.hasNext()) {
-	  Object label = j.next();
-	  if (b.delta(e, label).isEmpty()) {
-	    if (hole == null)
-	      hole = b.addState(false, false);
-	    try {
-	      b.addTransition(new Transition(e, label, hole));
-	    } catch (NoSuchStateException x) {
-	    }
-	  }
+	public SinkComplete(Set<L> alphabet) {
+		this.alphabet = alphabet;
 	}
-      }
-      if (!(hole == null)) {
-	Iterator j = alph.iterator();
-	while (j.hasNext()) {
-	  try {
-	    b.addTransition(new Transition(hole, j.next(), hole));
-	  } catch (NoSuchStateException x) {
-	  }
+
+	public SinkComplete() {
 	}
-      }
-      return b;
-    }
+
+	/*
+	 *  (non-Javadoc)
+	 * @see rationals.transformations.UnaryTransformation#transform(rationals.Automaton)
+	 */
+	public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a) {
+		Automaton<L, Tr, T> b = a.clone();
+		Set<L> alph = (alphabet == null) ? b.alphabet() : alphabet;
+		State hole = null;
+		Set<State> states = b.getStateFactory().stateSet();
+		states.addAll(b.states());
+		Iterator<State> i = states.iterator();
+		while (i.hasNext()) {
+			State e = i.next();
+			Iterator<L> j = alph.iterator();
+			while (j.hasNext()) {
+				L label = j.next();
+				if (b.delta(e, label).isEmpty()) {
+					if (hole == null)
+						hole = b.addState(false, false);
+					try {
+						b.addTransition(new Transition<>(e, label, hole));
+					} catch (NoSuchStateException ex) {
+						throw new Error(ex);
+					}
+				}
+			}
+		}
+		if (hole != null) {
+			Iterator<L> j = alph.iterator();
+			while (j.hasNext()) {
+				try {
+					b.addTransition(new Transition<>(hole, j.next(), hole));
+				} catch (NoSuchStateException ex) {
+					throw new Error(ex);
+				}
+			}
+		}
+		return b;
+	}
 }

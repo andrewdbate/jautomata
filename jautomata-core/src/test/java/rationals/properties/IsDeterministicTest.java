@@ -21,12 +21,12 @@ import rationals.Automaton;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
+import rationals.TransitionBuilder;
 import rationals.converters.ConverterException;
 import rationals.converters.Expression;
 import rationals.transformations.ToDFA;
 
 /**
- * @author nono
  * @version $Id: IsDeterministicTest.java 2 2006-08-24 14:41:48Z oqube $
  */
 public class IsDeterministicTest extends TestCase {
@@ -47,32 +47,32 @@ public class IsDeterministicTest extends TestCase {
     }
 
     public void testTrue() throws ConverterException {
-        Automaton a = new ToDFA().transform(new Expression().fromString("a(b+a*c)bc*"));
-        assertTrue(new IsDeterministic().test(a));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new ToDFA<String, Transition<String>, TransitionBuilder<String>>().transform(new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a(b+a*c)bc*"));
+        assertTrue(new IsDeterministic<String, Transition<String>, TransitionBuilder<String>>().test(a));
     }
     
     public void testFalse1() throws NoSuchStateException {
-        Automaton a = new Automaton();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Automaton<>();
         State s1 = a.addState(true,false);
         State s2 = a.addState(true,false);
         State s3 = a.addState(false,true);
-        a.addTransition(new Transition(s1,"a",s2));
-        a.addTransition(new Transition(s2,"b",s1));
-        a.addTransition(new Transition(s1,"b",s3));
-        a.addTransition(new Transition(s3,"a",s2));
-        assertTrue(!new IsDeterministic().test(a));
+        a.addTransition(new Transition<>(s1,"a",s2));
+        a.addTransition(new Transition<>(s2,"b",s1));
+        a.addTransition(new Transition<>(s1,"b",s3));
+        a.addTransition(new Transition<>(s3,"a",s2));
+        assertTrue(!new IsDeterministic<String, Transition<String>, TransitionBuilder<String>>().test(a));
         
     }
 
     public void testFalse2() throws NoSuchStateException {
-        Automaton a = new Automaton();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Automaton<>();
         State s1 = a.addState(true,false);
         State s2 = a.addState(false,false);
         State s3 = a.addState(false,true);
-        a.addTransition(new Transition(s1,"a",s2));
-        a.addTransition(new Transition(s2,"b",s1));
-        a.addTransition(new Transition(s2,"b",s3));
-        a.addTransition(new Transition(s3,"a",s2));
-        assertTrue(!new IsDeterministic().test(a));
+        a.addTransition(new Transition<>(s1,"a",s2));
+        a.addTransition(new Transition<>(s2,"b",s1));
+        a.addTransition(new Transition<>(s2,"b",s3));
+        a.addTransition(new Transition<>(s3,"a",s2));
+        assertTrue(!new IsDeterministic<String, Transition<String>, TransitionBuilder<String>>().test(a));
     }
 }

@@ -89,19 +89,17 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 		Set<L> alph = synchronization.synchronizable(a.alphabet(), b.alphabet());
 		/* check alphabets */
 		Map<StatesCouple, State> amap = new HashMap<>();
-		List<StatesCouple> todo = new ArrayList<>();
+		Queue<StatesCouple> todo = new LinkedList<>();
 		Set<StatesCouple> done = new HashSet<>();
 		Set<State> as = TransformationsToolBox.epsilonClosure(a.initials(), a);
 		Set<State> bs = TransformationsToolBox.epsilonClosure(b.initials(), b);
-		State from = ret.addState(true, TransformationsToolBox
-				.containsATerminalState(as)
-				&& TransformationsToolBox.containsATerminalState(bs));
+		State from = ret.addState(true, TransformationsToolBox.containsATerminalState(as) && TransformationsToolBox.containsATerminalState(bs));
 		StatesCouple sc = new StatesCouple(as, bs);
 		amap.put(sc, from);
 		todo.add(sc);
 		do {
-			StatesCouple couple = (StatesCouple) todo.remove(0);
-			from = (State) amap.get(couple);
+			StatesCouple couple = todo.remove();
+			from = amap.get(couple);
 			if (done.contains(couple))
 				continue;
 			done.add(couple);
@@ -118,7 +116,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 				if (!alph.contains(l)) {
 					Set<State> asc = TransformationsToolBox.epsilonClosure(as, a);
 					tcm.put(l, sc = new StatesCouple(asc, couple.sb));
-					State to = (State) amap.get(sc);
+					State to = amap.get(sc);
 					makeNewState(ret, amap, sc, to);
 					todo.add(sc);
 					i.remove();
@@ -139,8 +137,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 				}
 			}
 			/*
-			 * there remains in tam and tbm only possibly synchronizing
-			 * transitions
+			 * there remains in tam and tbm only possibly synchronising transitions
 			 */
 			for (Iterator<Map.Entry<L, Set<State>>> i = tam.entrySet().iterator(); i.hasNext();) {
 				Map.Entry<L, Set<State>> me = i.next();
@@ -162,7 +159,6 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 				}
 			}
 			/*
-			 * 
 			 * create new transitions in return automaton, update maps
 			 */
 			for (Iterator<Map.Entry<L, StatesCouple>> i = tcm.entrySet().iterator(); i.hasNext();) {
@@ -174,6 +170,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 				try {
 					ret.build(from, l, to);
 				} catch (NoSuchStateException e) {
+					throw new Error(e);
 				}
 				// ret.from(from).on(l).go(to);
 			}
@@ -181,10 +178,9 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 		return ret;
 	}
 
-	private void makeNewState(Automaton ret, Map amap, StatesCouple sc, State to) {
+	private void makeNewState(Automaton<L, Tr, T> ret, Map<StatesCouple, State> amap, StatesCouple sc, State to) {
 		if (to == null) {
-			to = ret.addState(false, TransformationsToolBox
-					.containsATerminalState(sc.sa)
+			to = ret.addState(false, TransformationsToolBox.containsATerminalState(sc.sa)
 					&& TransformationsToolBox.containsATerminalState(sc.sb));
 			amap.put(sc, to);
 		}
