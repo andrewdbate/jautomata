@@ -29,10 +29,11 @@ import java.util.*;
  * transition are transitions (q , l , q') where l is null.
  * 
  * @author Yves Roos
- * @version 22032002
  */
 public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTransformation<L, Tr, T> {
 
+	// TODO: add tests for this class
+	
     /*
      * (non-Javadoc)
      * 
@@ -40,26 +41,26 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
      */
     public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a) {
         Automaton<L, Tr, T> ret = new Automaton<>(); /* resulting automaton */
-        Map<HashValue<State>, State> sm = new HashMap<>();
-        Set<HashValue<State>> done = new HashSet<>();
-        List<HashValue<State>> todo = new ArrayList<>(); /* set of states to explore */
+        Map<Set<State>, State> sm = new HashMap<>();
+        Set<Set<State>> done = new HashSet<>();
+        Queue<Set<State>> todo = new LinkedList<>(); /* set of states to explore */
         Set<State> cur = TransformationsToolBox.epsilonClosure(a.initials(), a);
         /* add cur as initial state of ret */
-        State is = ret.addState(true,TransformationsToolBox.containsATerminalState(cur));
-        HashValue<State> hv = new HashValue<>(cur);
+        State is = ret.addState(true, TransformationsToolBox.containsATerminalState(cur));
+        Set<State> hv = new HashSet<>(cur);
         sm.put(hv,is);
         todo.add(hv);
         do {
-            HashValue<State> s = todo.remove(0);
+            Set<State> s = todo.poll();
             State ns =  sm.get(s);
             if(ns == null) {
-                ns = ret.addState(false,TransformationsToolBox.containsATerminalState(s.s));
+                ns = ret.addState(false,TransformationsToolBox.containsATerminalState(s));
                 sm.put(s,ns);
             }
             /* set s as explored */
             done.add(s);
             /* look for all transitions in s */
-            Map<L, Set<State>> trm = instructions(a.delta(s.s),a);
+            Map<L, Set<State>> trm = instructions(a.delta(s), a);
             Iterator<Map.Entry<L, Set<State>>> it = trm.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<L, Set<State>> e = it.next();
@@ -67,8 +68,8 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
                 Set<State> ar = e.getValue();
                 /* compute closure of arrival set */
                 ar = TransformationsToolBox.epsilonClosure(ar, a);
-                hv = new HashValue<>(ar);
-                /* retrieve state in new automaton from hashvalue */
+                hv = new HashSet<>(ar);
+                /* retrieve state in new automaton from hash value */
                 State ne = sm.get(hv);
                 if(ne == null) {
                     ne = ret.addState(false,TransformationsToolBox.containsATerminalState(ar));
