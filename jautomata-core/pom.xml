@@ -8,7 +8,6 @@
     <version>2.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>oqube</groupId>
   <artifactId>jautomata-core</artifactId>
 
   <packaging>jar</packaging>
