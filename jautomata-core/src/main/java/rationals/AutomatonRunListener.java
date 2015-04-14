@@ -26,17 +26,17 @@ import java.util.Set;
  * 
  * @version $Id: AutomatonRunListener.java 2 2006-08-24 14:41:48Z oqube $
  */
-public interface AutomatonRunListener {
+public interface AutomatonRunListener<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
 
     /**
-     * Callback method for notification of fire events occuring during the 
+     * Callback method for notification of fire events occurring during the 
      * run of an automaton.
      * 
      * @param automatonutomaton where the event took place
      * @param transitions the set of transitions which have been fired
      * @param o the object effectively "read" for firing transitions 
      */
-    public void fire(Automaton automaton,Set transitions,Object o);
+    public void fire(Automaton<L, Tr, T> automaton, Set<Tr> transitions, Object o);
 
 }
 

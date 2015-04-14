@@ -32,7 +32,6 @@ import rationals.expr.RationalExpr;
  * The cell of the matrix are rational expressions made from concatenation,
  * epsilon, letters and union.
  * 
- * @author nono
  * @version $Id: RationalMatrix.java 2 2006-08-24 14:41:48Z oqube $
  * @see rationals.expr
  */

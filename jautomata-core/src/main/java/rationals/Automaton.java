@@ -50,7 +50,7 @@ import java.util.*;
  * @see Transition State
  */
 public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
-		implements Acceptor<L>, StateMachine<L>, Rational<L>, Cloneable {
+		implements Acceptor<L>, StateMachine<L, Tr, T>, Rational<L>, Cloneable {
 	/* the identification of this automaton */
 	private Object id;
 
@@ -99,21 +99,21 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	private Map<Key, Set<Transition<L>>> reverse;
 
 	// bonte
-	private StateFactory stateFactory = new DefaultStateFactory(this);
+	private StateFactory<L, Tr, T> stateFactory = new DefaultStateFactory<>(this);
 
     private StateLabels stateLabels = new StateLabels();
     
 	/**
 	 * @return
 	 */
-	public StateFactory getStateFactory() {
+	public StateFactory<L, Tr, T> getStateFactory() {
 		return this.stateFactory;
 	}
 
 	/**
 	 * @param factory
 	 */
-	public void setStateFactory(StateFactory factory) {
+	public void setStateFactory(StateFactory<L, Tr, T> factory) {
 		this.stateFactory = factory;
 		factory.setAutomaton(this);
 	}
@@ -195,8 +195,8 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 *            the StateFactory object to use for creating new states. May be
 	 *            null.
 	 */
-	public Automaton(StateFactory sf) {
-		this.stateFactory = sf == null ? new DefaultStateFactory(this) : sf;
+	public Automaton(StateFactory<L, Tr, T> sf) {
+		this.stateFactory = sf == null ? new DefaultStateFactory<>(this) : sf;
 		alphabet = new HashSet<>();
 		states = stateFactory.stateSet();
 		initials = stateFactory.stateSet();
@@ -600,7 +600,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * @see rationals.converters.toAscii
 	 */
 	public String toString() {
-		return new rationals.converters.toAscii().toString(this);
+		return new rationals.converters.toAscii<L, Tr, T>().toString(this);
 	}
 
 	/**

@@ -105,7 +105,7 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
         lexico.read() ;
         Automaton<L, Tr, T> a = T() ;
         Automaton<L, Tr, T> b = EP() ;
-        return new Reducer<L, Tr, T>().transform(new Union().transform(a , b)) ;
+        return new Reducer<L, Tr, T>().transform(new Union<L, Tr, T>().transform(a , b)) ;
       }
       case Lexer.SHUFFLE :
 	  case Lexer.MIX : 

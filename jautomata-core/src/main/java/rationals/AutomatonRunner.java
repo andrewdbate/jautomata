@@ -24,21 +24,21 @@ package rationals;
  * 
  * @version $Id: AutomatonRunner.java 2 2006-08-24 14:41:48Z oqube $
  */
-public interface AutomatonRunner {
+public interface AutomatonRunner<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
 
     /**
      * Adds a listener to this runner
      * 
      * @param l the listener to add - may no be null
      */
-    public void addRunListener(AutomatonRunListener l);
+    public void addRunListener(AutomatonRunListener<L, Tr, T> l);
     
     /**
      * Remove a listener from this runner
      * 
      * @param l the listener to remove
      */
-    public void removeRunListener(AutomatonRunListener l);
+    public void removeRunListener(AutomatonRunListener<L, Tr, T> l);
 }
 
 /* 

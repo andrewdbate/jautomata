@@ -36,10 +36,8 @@ import java.util.Set;
  * internal behaviour of the machine, which can lead to non determinism.
  * <p>
  * The {@see rationals.Automaton} is the main implementation for this interface.
- * 
- * @version $Id: StateMachine.java 10 2007-05-30 17:25:00Z oqube $
  */
-public interface StateMachine<L> {
+public interface StateMachine<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     
     /**
      * Returns the alphabet - <code>S</code> - of this state machine.
@@ -64,14 +62,14 @@ public interface StateMachine<L> {
      * 
      * @return a StateFactory instance
      */
-    StateFactory getStateFactory();
+    StateFactory<L, Tr, T> getStateFactory();
 
     /**
      * Defines the state factory to use for this SM.
      * 
      * @param factory a StateFactory instance.
      */
-    void setStateFactory(StateFactory factory);
+    void setStateFactory(StateFactory<L, Tr, T> factory);
 
     /**
      * Returns the set of all transitions of this machine starting from a

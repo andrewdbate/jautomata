@@ -48,7 +48,7 @@ public class ToRExpression<Tr extends Transition<String>, T extends Builder<Stri
     public String toString(Automaton<String, Tr, T> a) {
         if(a == null) return "0";
         Automaton<String, Tr, T> ret = a.clone();
-        if (!new isNormalized().test(a))
+        if (!new isNormalized<String, Tr, T>().test(a))
             ret = new Normalizer<String, Tr, T>().transform(a);
         /* special case for empty automaton */
         if (ret.initials().isEmpty())
