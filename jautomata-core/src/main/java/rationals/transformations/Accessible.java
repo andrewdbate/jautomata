@@ -65,8 +65,7 @@ public class Accessible<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
 				try {
 					b.addTransition(new Transition<>(nstart,tr.label(),nend));
 				} catch (NoSuchStateException e) {
-					System.err.println(e.getMessage());
-					return null;
+					throw new Error(e);
 				}
 		}
 		return b;
