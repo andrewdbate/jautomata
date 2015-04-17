@@ -23,7 +23,7 @@ import rationals.converters.ConverterException;
  * This interface allows customization of parsing of RE, in particular to
  * override the definition of what is a labeL. 
  * Instances of Lexer are used by instances of Parser to retrieve tokens.
- * @author nono
+ *
  * @version $Id: Lexer.java 2 2006-08-24 14:41:48Z oqube $
  * @see DefaultLexer
  * @see Parser

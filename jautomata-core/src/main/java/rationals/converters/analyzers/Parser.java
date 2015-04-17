@@ -36,9 +36,9 @@ import rationals.transformations.Union;
 // F -> B B'
 // B' -> * | int | ^ | eps
 // B -> letter | 1 | 0 | ( E )
-public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
+public class Parser<Tr extends Transition<String>, T extends Builder<String, Tr, T>> {
     
-  private Lexer<L> lexico ;
+  private Lexer<String> lexico ;
   
   /**
    * Parse given string using standard grammar and lexical analyzer.
@@ -56,30 +56,30 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
    * 
    * @param lexer the lexer to use for parsing.
    */
-  public Parser(Lexer<L> lexer) {
+  public Parser(Lexer<String> lexer) {
       this.lexico = lexer;
   }
   
-  private Automaton<L, Tr, T> error(String message) throws ConverterException {
+  private Automaton<String, Tr, T> error(String message) throws ConverterException {
     throw new ConverterException("line " + lexico.lineNumber() + " , " + lexico.label() + " : " + message);
   }
   
-  public Automaton<L, Tr, T> analyze() throws ConverterException {
+  public Automaton<String, Tr, T> analyze() throws ConverterException {
     lexico.read() ;
-    Automaton<L, Tr, T> r = E() ;
+    Automaton<String, Tr, T> r = E();
     if (lexico.current() != Lexer.END) error("end of expression expected") ;
     return r ; 
   }
   
-  private Automaton<L, Tr, T> E() throws ConverterException {
+  private Automaton<String, Tr, T> E() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON :
       case Lexer.EMPTY :
       case Lexer.OPEN :
       case Lexer.LABEL : {
-        Automaton<L, Tr, T> a = T() ;
-        Automaton<L, Tr, T> b = EP() ;
-        return new Reducer<L, Tr, T>().transform(new Union<L, Tr, T>().transform(a , b)) ;
+        Automaton<String, Tr, T> a = T();
+        Automaton<String, Tr, T> b = EP();
+        return new Reducer<String, Tr, T>().transform(new Union<String, Tr, T>().transform(a , b));
       }       
       case Lexer.CLOSE :
       case Lexer.END :
@@ -93,19 +93,19 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> EP() throws ConverterException {
+  private Automaton<String, Tr, T> EP() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON :
       case Lexer.EMPTY :
       case Lexer.OPEN :
       case Lexer.LABEL : return error("union expected") ; 
       case Lexer.CLOSE :
-      case Lexer.END : return new Automaton<L, Tr, T>() ;
+      case Lexer.END : return new Automaton<String, Tr, T>() ;
       case Lexer.UNION : {
         lexico.read() ;
-        Automaton<L, Tr, T> a = T() ;
-        Automaton<L, Tr, T> b = EP() ;
-        return new Reducer<L, Tr, T>().transform(new Union<L, Tr, T>().transform(a , b)) ;
+        Automaton<String, Tr, T> a = T() ;
+        Automaton<String, Tr, T> b = EP() ;
+        return new Reducer<String, Tr, T>().transform(new Union<String, Tr, T>().transform(a , b)) ;
       }
       case Lexer.SHUFFLE :
 	  case Lexer.MIX : 
@@ -116,15 +116,15 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> T() throws ConverterException {
+  private Automaton<String, Tr, T> T() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON :
       case Lexer.EMPTY :
       case Lexer.OPEN :
       case Lexer.LABEL : {
-        Automaton<L, Tr, T> a = S() ;
-        Automaton<L, Tr, T> b = TS() ;
-        return new Reducer<L, Tr, T>().transform(new Shuffle().transform(a , b)) ;
+        Automaton<String, Tr, T> a = S();
+        Automaton<String, Tr, T> b = TS();
+        return new Reducer<String, Tr, T>().transform(new Shuffle<String, Tr, T>().transform(a , b)) ;
       }       
       case Lexer.CLOSE :
       case Lexer.END :
@@ -138,7 +138,7 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> TS() throws ConverterException {
+  private Automaton<String, Tr, T> TS() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON :
       case Lexer.EMPTY :
@@ -149,16 +149,16 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
       case Lexer.UNION : return Automaton.epsilonAutomaton() ;
 	  case Lexer.SHUFFLE : {
 		lexico.read() ;
-		Automaton<L, Tr, T> a = S() ;
-		Automaton<L, Tr, T> b = TS() ;
-		return new Reducer<L, Tr, T>().transform(new Shuffle<L, Tr, T>().transform(a , b)) ;
+		Automaton<String, Tr, T> a = S() ;
+		Automaton<String, Tr, T> b = TS() ;
+		return new Reducer<String, Tr, T>().transform(new Shuffle<String, Tr, T>().transform(a , b)) ;
 	  }
 	  case Lexer.MIX : 
 	  	{
 		lexico.read() ;
-		Automaton<L, Tr, T> a = S() ;
-		Automaton<L, Tr, T> b = TS() ;
-		return new Reducer<L, Tr, T>().transform(new Mix().transform(a , b)) ;
+		Automaton<String, Tr, T> a = S() ;
+		Automaton<String, Tr, T> b = TS() ;
+		return new Reducer<String, Tr, T>().transform(new Mix<String, Tr, T>().transform(a , b)) ;
 	  }
       case Lexer.STAR :
       case Lexer.ITERATION :
@@ -167,15 +167,15 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> S() throws ConverterException {
+  private Automaton<String, Tr, T> S() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON :
       case Lexer.EMPTY :
       case Lexer.OPEN :
       case Lexer.LABEL : {
-        Automaton<L, Tr, T> a = F() ;
-        Automaton<L, Tr, T> b = TP() ;
-        return new Reducer<L, Tr, T>().transform(new Concatenation<L, Tr, T>().transform(a , b)) ;
+        Automaton<String, Tr, T> a = F() ;
+        Automaton<String, Tr, T> b = TP() ;
+        return new Reducer<String, Tr, T>().transform(new Concatenation<String, Tr, T>().transform(a , b)) ;
       }       
       case Lexer.CLOSE :
       case Lexer.END :
@@ -189,15 +189,15 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> TP() throws ConverterException {
+  private Automaton<String, Tr, T> TP() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON :
       case Lexer.EMPTY :
       case Lexer.OPEN :
       case Lexer.LABEL :{
-        Automaton<L, Tr, T> a = F() ;
-        Automaton<L, Tr, T> b = TP() ;
-        return new Reducer<L, Tr, T>().transform(new Concatenation<L, Tr, T>().transform(a , b)) ;
+        Automaton<String, Tr, T> a = F() ;
+        Automaton<String, Tr, T> b = TP() ;
+        return new Reducer<String, Tr, T>().transform(new Concatenation<String, Tr, T>().transform(a , b)) ;
       }
       case Lexer.CLOSE :
       case Lexer.END : 
@@ -211,13 +211,13 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> F() throws ConverterException {
+  private Automaton<String, Tr, T> F() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON :
       case Lexer.EMPTY :
       case Lexer.OPEN :
       case Lexer.LABEL : {
-        Automaton<L, Tr, T> a = BP(B()) ; 
+        Automaton<String, Tr, T> a = BP(B()) ; 
         return a ;
       }       
       case Lexer.CLOSE :
@@ -232,27 +232,27 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> B() throws ConverterException {
+  private Automaton<String, Tr, T> B() throws ConverterException {
     switch(lexico.current()) {
       case Lexer.EPSILON : {
-        Automaton<L, Tr, T> a = Automaton.epsilonAutomaton() ;
+        Automaton<String, Tr, T> a = Automaton.epsilonAutomaton() ;
         lexico.read() ;
         return a ;
       }
       case Lexer.EMPTY : {
-        Automaton<L, Tr, T> a = new Automaton<>() ;
+        Automaton<String, Tr, T> a = new Automaton<>() ;
         lexico.read() ;
         return a ;
       }
       case Lexer.OPEN : {
         lexico.read() ;
-        Automaton<L, Tr, T> a = E() ;
+        Automaton<String, Tr, T> a = E() ;
         if (lexico.current() != Lexer.CLOSE) return error("( expected") ;
         lexico.read() ;
         return a ;
       }
       case Lexer.LABEL : {
-        Automaton<L, Tr, T> a = Automaton.labelAutomaton(lexico.label()) ;
+        Automaton<String, Tr, T> a = Automaton.labelAutomaton(lexico.label()) ;
         lexico.read() ;
         return a ;
       }      
@@ -268,7 +268,7 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
     }
   }
 
-  private Automaton<L, Tr, T> BP(Automaton<L, Tr, T> a) throws ConverterException {
+  private Automaton<String, Tr, T> BP(Automaton<String, Tr, T> a) throws ConverterException {
     switch(lexico.current()) {
       case Lexer.OPEN :
       case Lexer.LABEL :
@@ -279,19 +279,19 @@ public class Parser<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
       case Lexer.SHUFFLE :return a ;
       case Lexer.STAR : {
         lexico.read() ; 
-        return new Reducer<L, Tr, T>().transform(new Star().transform(a)) ;
+        return new Reducer<String, Tr, T>().transform(new Star<String, Tr, T>().transform(a)) ;
       }
       case Lexer.ITERATION :
         lexico.read() ; 
-        return new Reducer<L, Tr, T>().transform(new Concatenation<L, Tr, T>().transform(a, new Star().transform(a))) ;
+        return new Reducer<String, Tr, T>().transform(new Concatenation<String, Tr, T>().transform(a, new Star<String, Tr, T>().transform(a))) ;
       case Lexer.EPSILON :
       case Lexer.EMPTY :
       case Lexer.INT : {
         int value = lexico.value() ;
         lexico.read() ;
-        Automaton<L, Tr, T> b = Automaton.epsilonAutomaton();
+        Automaton<String, Tr, T> b = Automaton.epsilonAutomaton();
         for (int i = 0 ; i < value ; i++) {
-          b = new Reducer<L, Tr, T>().transform(new Concatenation<L, Tr, T>().transform(b , a)) ;
+          b = new Reducer<String, Tr, T>().transform(new Concatenation<String, Tr, T>().transform(b , a)) ;
         }
         return b ;
       }

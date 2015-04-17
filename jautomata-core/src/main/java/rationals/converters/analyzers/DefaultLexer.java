@@ -31,7 +31,7 @@ import java.io.StringReader;
  * @author yroos
  * @version $Id: DefaultLexer.java 2 2006-08-24 14:41:48Z oqube $
  */
-public class DefaultLexer implements Lexer {
+public class DefaultLexer implements Lexer<String> {
     private StreamTokenizer tokenizer;
 
     private boolean end;
@@ -163,7 +163,7 @@ public class DefaultLexer implements Lexer {
         return tokenizer.lineno();
     }
 
-    public Object label() {
+    public String label() {
         return image;
     }
 
