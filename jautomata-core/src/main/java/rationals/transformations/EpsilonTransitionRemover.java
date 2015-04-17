@@ -146,6 +146,7 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
     			Automaton<L, Tr, T> s2Accessible = finalToAccessible.get(s2);
     			if (sameLanguage(s1Accessible, s2Accessible)) {
     				canonicalStateMap.put(s1, s2);
+    				break;
     			}
     		}
     		if (!canonicalStateMap.containsKey(s1)) {
