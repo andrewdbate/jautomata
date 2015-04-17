@@ -23,7 +23,6 @@ import java.util.Arrays;
  * <p>
  * The elements of a the matrix are {@see SemiRing}objects.
  * 
- * @author nono
  * @version $Id: Matrix.java 6 2006-08-30 08:56:44Z oqube $
  */
 public final class Matrix implements SemiRing {
@@ -117,7 +116,6 @@ public final class Matrix implements SemiRing {
     public String toString() {
         final String ln = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer();
-        int n = matrix.length;
         for (int i = 0; i < line; i++) {
             sb.append("[ ");
             for (int j = 0; j < col; j++) {
