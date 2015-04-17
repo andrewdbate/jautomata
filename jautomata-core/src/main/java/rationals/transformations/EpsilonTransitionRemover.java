@@ -21,6 +21,7 @@ import rationals.Builder;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
+import rationals.properties.ModelCheck;
 
 import java.util.*;
 
@@ -29,10 +30,13 @@ import java.util.*;
  * transition are transitions (q , l , q') where l is null.
  * 
  * @author Yves Roos
+ * @author Andrew Bate
  */
 public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTransformation<L, Tr, T> {
 
 	// TODO: add tests for this class
+	
+	protected final ModelCheck<L, Tr, T> m = new ModelCheck<>();
 	
     /*
      * (non-Javadoc)
@@ -85,7 +89,7 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
                     todo.add(hv);
             }
         } while (!todo.isEmpty());
-        return ret;
+        return reduceFinalStates(ret);
     }
 
     private Map<L, Set<State>> instructions(Set<Transition<L>> s, Automaton<L, Tr, T> a) {
@@ -105,6 +109,79 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
             }
         }
         return m;
+    }
+    
+    /**
+     * The epsilon transition procedure implemented in transform() will introduce
+     * multiple terminal states whenever a final state is reachable along different
+     * paths through the NFA, even some final states do not have any outgoing
+     * transitions. This method will try to reduce the number of final states by
+     * merging final states wherever possible, by checking if two final states are 
+     * equivalent by determining whether the regular languages starting from those
+     * two states are the same.
+     * 
+     * @param a
+     * @return
+     */
+    protected Automaton<L, Tr, T> reduceFinalStates(Automaton<L, Tr, T> a) {
+    	// reduced is the possible smaller automaton to be constructed
+    	Automaton<L, Tr, T> reduced = new Automaton<>();
+    	// Map from each terminal state to the automaton encoding the language accessible from the state
+    	Map<State, Automaton<L, Tr, T>> finalToAccessible = new HashMap<>();
+    	for (State terminal : a.terminals()) {
+    		Accessible<L, Tr, T> accessible = new Accessible<>(terminal);
+    		Automaton<L, Tr, T> b = accessible.transform(a);
+    		finalToAccessible.put(terminal, b);
+    	}
+    	// Map each state in the input automaton to an equivalent state in the resultant automaton
+    	Map<State, State> canonicalStateMap = new HashMap<>();
+    	// Put terminal states into a total order (in order to establish which terminal state in an equivalence class is the canonical member)
+    	List<State> order = new ArrayList<>(finalToAccessible.keySet());
+    	// Map from each terminal state in a to the smallest equivalent terminal state
+    	for (int i = 0; i < order.size(); i++) {
+    		State s1 = order.get(i);
+    		Automaton<L, Tr, T> s1Accessible = finalToAccessible.get(s1);
+    		for (int j = 0; j < i; j++) {
+    			State s2 = order.get(j);
+    			Automaton<L, Tr, T> s2Accessible = finalToAccessible.get(s2);
+    			if (sameLanguage(s1Accessible, s2Accessible)) {
+    				canonicalStateMap.put(s1, s2);
+    			}
+    		}
+    		if (!canonicalStateMap.containsKey(s1)) {
+    			canonicalStateMap.put(s1, s1);
+    		}
+    	}
+    	// All other states will map to themselves (until the implementation is more sophisticated)
+    	for (State s : a.states()) {
+    		if (!s.isTerminal()) {
+    			canonicalStateMap.put(s, s);
+    		}
+    	}
+    	// Build the new automaton
+    	Map<State, State> stateMap = new HashMap<>();
+    	for (State s : a.states()) {
+    		State equivalentState = canonicalStateMap.get(s);
+    		if (!stateMap.containsKey(equivalentState)) {
+    			// Avoid adding unreachable states to the automaton
+       			State newS = reduced.addState(equivalentState.isInitial(), equivalentState.isTerminal());
+       			stateMap.put(s, newS);	
+    		}
+    	}
+    	for (Transition<L> t : a.delta()) {
+    		try {
+    			State equivalentStart = canonicalStateMap.get(t.start());
+    			State equivalentEnd = canonicalStateMap.get(t.end());
+				reduced.addTransition(new Transition<>(stateMap.get(equivalentStart), t.label(), stateMap.get(equivalentEnd)));
+			} catch (NoSuchStateException e) {
+				throw new Error(e);
+			}
+    	}
+    	return reduced;
+    }
+    
+    protected boolean sameLanguage(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b) {
+    	return m.test(a, b) && m.test(b, a); 
     }
 
 }
