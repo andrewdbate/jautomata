@@ -47,22 +47,21 @@ public class Shuffle<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> i
 
     public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b) {
 
-        Mix mix = new Mix(new Synchronization() {
-            public Object synchronize(Object t1, Object t2) {
+        Mix<L, Tr, T> mix = new Mix<>(new Synchronization<L>() {
+        	@Override
+            public L synchronize(L t1, L t2) {
                 return null;
             }
-
-            public Set synchronizable(Set a, Set b) {
-                return Collections.unmodifiableSet(new HashSet());
+        	@Override
+            public Set<L> synchronizable(Set<L> a, Set<L> b) {
+                return Collections.unmodifiableSet(new HashSet<L>());
             }
-
-            public Set synchronizing(Collection alphabets) {
-                // TODO Auto-generated method stub
+        	@Override
+            public Set<L> synchronizing(Collection<Set<L>> alphabets) {
                 return null;
             }
-
-            public boolean synchronizeWith(Object object, Set alph) {
-                // TODO Auto-generated method stub
+        	@Override
+            public boolean synchronizeWith(L object, Set<L> alph) {
                 return false;
             }
         });

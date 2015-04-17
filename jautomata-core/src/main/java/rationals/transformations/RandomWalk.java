@@ -19,7 +19,10 @@ package rationals.transformations;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
 import rationals.Automaton;
+import rationals.Builder;
+import rationals.State;
 import rationals.Transition;
 
 import java.util.ArrayList;
@@ -29,22 +32,22 @@ import java.util.Set;
 
 
 /**
-Randomly walk an {@link rationals.Automaton} until some condition is met.
-
-<p>A random walk start from the initial(s) state of the given automaton and repeatedly builds a word that, firing a
-transition, moving to given state, until the accumulated word matches some predicate. The condition is given as a
-parameter of the random walk.</p>
+ * Randomly walk an {@link rationals.Automaton} until some condition is met.
+ *
+ * <p>A random walk start from the initial(s) state of the given automaton and repeatedly builds a word that, firing a
+ * transition, moving to given state, until the accumulated word matches some predicate. The condition is given as a
+ * parameter of the random walk.</p>
  */
-public class RandomWalk {
+public class RandomWalk<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> {
 
   private final Random random = new Random();
 
-  public List<Object> walk(Automaton a, Matcher<List<Object>> condition) {
-    Set states = a.initials();
-    List<Object> word = new ArrayList<Object>();
+  public List<L> walk(Automaton<L, Tr, T> a, Matcher<List<L>> condition) {
+    Set<State> states = a.initials();
+    List<L> word = new ArrayList<L>();
 
     while (true) {
-      Object l = selectALetter(a, states);
+      L l = selectALetter(a, states);
       word.add(l);
       states = a.step(states, l);
       if (condition.matches(word)) {
@@ -55,16 +58,16 @@ public class RandomWalk {
     return word;
   }
 
-  private Object selectALetter(Automaton a, Set states) {
-    Set<Transition> delta = a.delta(states);
+  private L selectALetter(Automaton<L, Tr, T> a, Set<State> states) {
+    Set<Transition<L>> delta = a.delta(states);
 
     if (delta.isEmpty()) {
       throw new IllegalStateException("cannot find a transition");
     }
 
-    Object selected = null;
+    L selected = null;
     int ln = random.nextInt(delta.size());
-    for (Transition transition : delta) {
+    for (Transition<L> transition : delta) {
       if (ln-- == 0) {
         selected = transition.label();
         break;
@@ -73,10 +76,10 @@ public class RandomWalk {
     return selected;
   }
 
-  public static Matcher<List<Object>> hasLength(final int length) {
-    return new TypeSafeMatcher<List<Object>>() {
+  public static <L> Matcher<List<L>> hasLength(final int length) {
+    return new TypeSafeMatcher<List<L>>() {
       @Override
-      protected boolean matchesSafely(List<Object> objects) {
+      protected boolean matchesSafely(List<L> objects) {
         return objects.size() == length;
       }
 
