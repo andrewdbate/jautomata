@@ -31,6 +31,9 @@ import rationals.Transition;
  * 
  * This transformation computes the complement of an automaton: The automaton is first converted to a DFA (if it is not
  * already a DFA), and the set of final states becomes the entire set of states minus the original set of final states.
+ * 
+ * @author Arnaud Bailly
+ * @author Andrew Bate
  */
 public class Complement<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTransformation<L, Tr, T> {
 
