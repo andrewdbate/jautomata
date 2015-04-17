@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import rationals.Automaton;
+import rationals.Builder;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
@@ -38,31 +39,30 @@ import rationals.Transition;
  * <li>D(C) = D(A)</li>
  * </ul>
  * 
- * @author nono
  * @version $Id: PrefixClosure.java 2 2006-08-24 14:41:48Z oqube $
  */
-public class PrefixClosure implements UnaryTransformation {
+public class PrefixClosure<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTransformation<L, Tr, T> {
 
     /*
      * (non-Javadoc)
      * 
      * @see rationals.transformations.UnaryTransformation#transform(rationals.Automaton)
      */
-    public Automaton transform(Automaton a) {
-        Automaton ret = new Automaton();
-        Map sm = new HashMap();
-        for (Iterator it = a.states().iterator(); it.hasNext();) {
-            State st = (State) it.next();
+    public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a) {
+        Automaton<L, Tr, T> ret = new Automaton<>();
+        Map<State, State> sm = new HashMap<>();
+        for (Iterator<State> it = a.states().iterator(); it.hasNext();) {
+            State st = it.next();
             State sr = ret.addState(st.isInitial(), true);
             sm.put(st, sr);
         }
         /* add all transitions */
-        for (Iterator it = a.delta().iterator(); it.hasNext();) {
-            Transition tr = (Transition) it.next();
+        for (Iterator<Transition<L>> it = a.delta().iterator(); it.hasNext();) {
+        	Transition<L> tr = it.next();
             try {
-                ret.addTransition(new Transition((State) sm.get(tr.start()), tr
-                        .label(), (State) sm.get(tr.end())));
+                ret.addTransition(new Transition<>(sm.get(tr.start()), tr.label(), sm.get(tr.end())));
             } catch (NoSuchStateException e) {
+            	throw new Error(e);
             }
         }
         return ret;
