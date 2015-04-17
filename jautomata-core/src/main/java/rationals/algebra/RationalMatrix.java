@@ -35,7 +35,7 @@ import rationals.expr.RationalExpr;
  * @version $Id: RationalMatrix.java 2 2006-08-24 14:41:48Z oqube $
  * @see rationals.expr
  */
-public class RationalMatrix  {
+public class RationalMatrix<L>  {
 
     private Matrix init;
     private Matrix fini;
@@ -89,8 +89,8 @@ public class RationalMatrix  {
      * @param rat
      *            a Rational language.
      */
-    public RationalMatrix(Rational rat) {
-        Set st = rat.states();
+    public RationalMatrix(Rational<L> rat) {
+        Set<State> st = rat.states();
         int n = st.size();
         init = Matrix.zero(1,n,RationalExpr.zero);
         fini = Matrix.zero(n,1,RationalExpr.zero);
@@ -108,10 +108,10 @@ public class RationalMatrix  {
                 fini.matrix[i][0] = RationalExpr.zero;
             /* transitions */
             for (int j = 0; j < n; j++) {
-                Set trs = rat.deltaFrom(sta[i], (State) sta[j]);
+                Set<Transition<L>> trs = rat.deltaFrom(sta[i], sta[j]);
                 RationalExpr re = null;
-                for (Iterator it = trs.iterator(); it.hasNext();) {
-                    Transition tr = (Transition) it.next();
+                for (Iterator<Transition<L>> it = trs.iterator(); it.hasNext();) {
+                    Transition<L> tr = it.next();
                     Object o = tr.label();
                     Letter l = (o == null) ? Letter.epsilon : new Letter(o);
                     if (re == null)
