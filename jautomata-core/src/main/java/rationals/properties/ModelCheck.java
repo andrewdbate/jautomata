@@ -16,6 +16,9 @@
  */
 package rationals.properties;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import rationals.Automaton;
 import rationals.Builder;
 import rationals.Transition;
@@ -48,11 +51,16 @@ public class ModelCheck<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
     /*
      * (non-Javadoc)
      * 
-     * @see rationals.properties.BinaryTest#test(rationals.Automaton,
-     *      rationals.Automaton)
+     * @see rationals.properties.BinaryTest#test(rationals.Automaton, rationals.Automaton)
      */
     public boolean test(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b) {
-        Automaton<L, Tr, T> ca = new Complement<L, Tr, T>().transform(a);
+    	// Need to take the union of both alphabets. Otherwise, if for example, a the empty automaton,
+    	// then the complement a would also be empty (if the complement did not use b's alphabet), and
+    	// this method would otherwise will always return true, regardless of whether b was empty or not.
+    	Set<L> alphabet = new HashSet<>();
+    	alphabet.addAll(a.alphabet());
+    	alphabet.addAll(b.alphabet());
+        Automaton<L, Tr, T> ca = new Complement<L, Tr, T>(alphabet).transform(a);
         counterExamples = new Pruner<L, Tr, T>().transform(new Mix<L, Tr, T>().transform(ca, b));
         if (new isEmpty<L, Tr, T>().test(counterExamples))
             return true;

@@ -18,6 +18,7 @@ package rationals.transformations;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import rationals.Automaton;
 import rationals.Builder;
@@ -33,13 +34,24 @@ import rationals.Transition;
  */
 public class Complement<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements UnaryTransformation<L, Tr, T> {
 
+	protected final Set<L> alphabet;
+
+	public Complement(Set<L> alphabet) {
+		this.alphabet = alphabet;
+	}
+
+	public Complement() {
+		this.alphabet = null;
+	}
+	
     /*
      * (non-Javadoc)
      * 
      * @see rationals.transformations.UnaryTransformation#transform(rationals.Automaton)
      */
     public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a) {
-    	Automaton<L, Tr, T> complement = new SinkComplete<L, Tr, T>().transform(new ToDFA<L, Tr, T>().transform(a));
+    	Set<L> alph = alphabet != null ? alphabet : a.alphabet(); 
+    	Automaton<L, Tr, T> complement = new SinkComplete<L, Tr, T>(alph).transform(new ToDFA<L, Tr, T>().transform(a));
     	Map<State, State> map = new HashMap<>();
     	Automaton<L, Tr, T> result = new Automaton<>();
     	for (State s : complement.states()) {
