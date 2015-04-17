@@ -618,7 +618,8 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 		for (Transition<L> t : delta()) {
 			try {
 				b.addTransition(new Transition<>(map.get(t.start()), t.label(), map.get(t.end())));
-			} catch (NoSuchStateException x) {
+			} catch (NoSuchStateException e) {
+				throw new Error(e);
 			}
 		}
 		return b;
