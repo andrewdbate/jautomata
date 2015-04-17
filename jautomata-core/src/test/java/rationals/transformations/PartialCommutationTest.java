@@ -26,16 +26,16 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 
 
-class PartialCommutationTes extends TestCase {
-
-
-    public void _ignored_test_two_letters_commute_when_they_are_adjacent() throws Exception {
-        Automaton a = new Expression().fromString("abcd");
-        Set bc = new HashSet();
-        bc.add("b");
-        bc.add("c");
-        Automaton commuted = new PartialCommutation(bc).transform(a);
-
-        assertTrue("should recognize commuted word", commuted.accept(asList("a", "c", "b", "d")));
-    }
-}
+//class PartialCommutationTes extends TestCase {
+//
+//
+//    public void _ignored_test_two_letters_commute_when_they_are_adjacent() throws Exception {
+//        Automaton a = new Expression().fromString("abcd");
+//        Set bc = new HashSet();
+//        bc.add("b");
+//        bc.add("c");
+//        Automaton commuted = new PartialCommutation(bc).transform(a);
+//
+//        assertTrue("should recognize commuted word", commuted.accept(asList("a", "c", "b", "d")));
+//    }
+//}
