@@ -61,17 +61,17 @@ public class SinkComplete<L, Tr extends Transition<L>, T extends Builder<L, Tr, 
 		states.addAll(b.states());
 		Iterator<State> i = states.iterator();
 		while (i.hasNext()) {
-			State e = i.next();
+			State state = i.next();
 			Iterator<L> j = alph.iterator();
 			while (j.hasNext()) {
 				L label = j.next();
-				if (b.delta(e, label).isEmpty()) {
+				if (b.delta(state, label).isEmpty()) {
 					if (hole == null)
 						hole = b.addState(false, false);
 					try {
-						b.addTransition(new Transition<>(e, label, hole));
-					} catch (NoSuchStateException ex) {
-						throw new Error(ex);
+						b.addTransition(new Transition<>(state, label, hole));
+					} catch (NoSuchStateException e) {
+						throw new Error(e);
 					}
 				}
 			}
@@ -81,8 +81,8 @@ public class SinkComplete<L, Tr extends Transition<L>, T extends Builder<L, Tr, 
 			while (j.hasNext()) {
 				try {
 					b.addTransition(new Transition<>(hole, j.next(), hole));
-				} catch (NoSuchStateException ex) {
-					throw new Error(ex);
+				} catch (NoSuchStateException e) {
+					throw new Error(e);
 				}
 			}
 		}

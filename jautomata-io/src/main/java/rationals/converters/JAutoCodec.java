@@ -150,7 +150,7 @@ public class JAutoCodec implements StreamEncoder,StreamDecoder {
             try {
                 a.addTransition(new Transition(from,lbl,to));
             } catch (NoSuchStateException e) {
-                e.printStackTrace();
+            	throw new Error(e);
             }
         }
         return a;

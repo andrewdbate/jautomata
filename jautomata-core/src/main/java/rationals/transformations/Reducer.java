@@ -130,7 +130,8 @@ public class Reducer<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> i
                 State fp = newStates.get(current.get(f));
                 try {
                     c.addTransition(new Transition<>(rp, l, fp));
-                } catch (NoSuchStateException x) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
         }

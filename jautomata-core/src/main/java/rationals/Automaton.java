@@ -146,7 +146,8 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 		State end = v.addState(false, true);
 		try {
 			v.addTransition(new Transition<L>(start, label, end));
-		} catch (NoSuchStateException x) {
+		} catch (NoSuchStateException e) {
+			throw new Error(e);
 		}
 		return v;
 	}
@@ -175,7 +176,8 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 				v.addTransition(new Transition<L>(start, o, end));
 				start = end;
 			}
-		} catch (NoSuchStateException x) {
+		} catch (NoSuchStateException e) {
+			throw new Error(e);
 		}
 		return v;
 	}

@@ -59,6 +59,7 @@ public class Normalizer<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
             try {
                 b.addTransition(new Transition<L>(ni, null, nt));
             } catch (NoSuchStateException e) {
+            	throw new Error(e);
             }
         Iterator<Transition<L>> i2 = a.delta().iterator();
         while (i2.hasNext()) {
@@ -66,25 +67,29 @@ public class Normalizer<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
             if (t.start().isInitial() && t.end().isTerminal()) {
                 try {
                     b.addTransition(new Transition<L>(ni, t.label(), nt));
-                } catch (NoSuchStateException x) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
             if (t.start().isInitial()) {
                 try {
                     b.addTransition(new Transition<L>(ni, t.label(), map.get(t.end())));
-                } catch (NoSuchStateException x) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
 
             if (t.end().isTerminal())
                 try {
                     b.addTransition(new Transition<L>(map.get(t.start()), t.label(), nt));
-                } catch (NoSuchStateException x) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
 
             try {
                 b.addTransition(new Transition<L>(map.get(t.start()), t.label(), map.get(t.end())));
-            } catch (NoSuchStateException x) {
+            } catch (NoSuchStateException e) {
+            	throw new Error(e);
             }
 
         }

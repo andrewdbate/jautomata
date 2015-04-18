@@ -74,6 +74,7 @@ public class CompleteNop<L, Tr extends Transition<L>, T extends Builder<L, Tr, T
                 try {
                     b.addTransition(new Transition<>(qm.get(tr.start()), tr.label(), qm.get(tr.end())));
                 } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
                 alph.remove(tr.label());
             }
@@ -81,6 +82,7 @@ public class CompleteNop<L, Tr extends Transition<L>, T extends Builder<L, Tr, T
                 try {
                     b.addTransition(new Transition<L>(q, i2.next(), q));
                 } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
             alph.clear();

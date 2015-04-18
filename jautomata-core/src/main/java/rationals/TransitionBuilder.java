@@ -70,7 +70,7 @@ public class TransitionBuilder<L> implements
 		try {
 			automaton.addTransition(new Transition<L>(start, label, s));
 		} catch (NoSuchStateException e) {
-			assert false;
+			throw new Error(e);
 		}
 		return this;
 	}
@@ -85,7 +85,7 @@ public class TransitionBuilder<L> implements
 		try {
 			automaton.addTransition(new Transition<L>(start, label, start));
 		} catch (NoSuchStateException e) {
-			assert false;
+			throw new Error(e);
 		}
 		return this;
 	}

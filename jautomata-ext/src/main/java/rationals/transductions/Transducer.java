@@ -209,6 +209,7 @@ public class Transducer extends Automaton implements Transduction {
                         ret.addTransition(new Transition((State) it3.next(),
                             null, sst));
                 } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
             /* end states */
@@ -249,8 +250,8 @@ public class Transducer extends Automaton implements Transduction {
                 }
                 try {
                     ret.addTransition(new Transition(ast, rel.getOut(), bst));
-                } catch (NoSuchStateException e1) {
-                    e1.printStackTrace();
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
             /* connect sm to om */
@@ -269,7 +270,8 @@ public class Transducer extends Automaton implements Transduction {
                     for (Iterator iter = niou.iterator(); iter.hasNext();) {
                         ret.addTransition(new Transition((State)iter.next(), null, end));
                     }
-                } catch (NoSuchStateException e1) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
 
         }

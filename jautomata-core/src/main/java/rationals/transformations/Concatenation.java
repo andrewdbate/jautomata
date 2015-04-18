@@ -98,7 +98,8 @@ public class Concatenation<L, Tr extends Transition<L>, T extends Builder<L, Tr,
                     c.addTransition(new Transition<>(map.get(t.start()), t.label(), junc));
                 else
                     c.addTransition(new Transition<>(map.get(t.start()), t.label(), map.get(t.end())));
-            } catch (NoSuchStateException x) {
+            } catch (NoSuchStateException e) {
+            	throw new Error(e);
             }
 
         }
@@ -110,7 +111,8 @@ public class Concatenation<L, Tr extends Transition<L>, T extends Builder<L, Tr,
                     c.addTransition(new Transition<>(junc, t.label(), map.get(t.end())));
                 else
                     c.addTransition(new Transition<>(map.get(t.start()), t.label(), map.get(t.end())));
-            } catch (NoSuchStateException x) {
+            } catch (NoSuchStateException e) {
+            	throw new Error(e);
             }
         }
         return c;

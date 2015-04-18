@@ -117,8 +117,7 @@ public class ToRExpression<Tr extends Transition<String>, T extends Builder<Stri
                         keys.put(k, oldre);
                         ret.addTransition(new Transition<String>(s1, oldre, s2));
                     } catch (NoSuchStateException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        throw new Error(e);
                     }
                 }
             }

@@ -101,12 +101,14 @@ public class InverseMorphism implements UnaryTransformation {
                 try {
                     b.addTransition(new Transition(nss,lbl,nse));
                 } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             else
                 try {
                 	for(Iterator j = s.iterator();j.hasNext();)
                 		b.addTransition(new Transition(nss,j.next(),nse));
-                } catch (NoSuchStateException e1) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
         }
         // handle epsilon's image
@@ -121,6 +123,7 @@ public class InverseMorphism implements UnaryTransformation {
 						if(o != null)
 							b.addTransition(new Transition(st,o,st));
 					} catch (NoSuchStateException e) {
+						throw new Error(e);
 					}
         		}
         	}

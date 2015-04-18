@@ -49,7 +49,9 @@ public class Pruner<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> im
       if(bs == null || be == null) continue;
       try {
         b.addTransition(new Transition<>(bs, t.label(), be));
-      } catch (NoSuchStateException x) {}
+      } catch (NoSuchStateException e) {
+    	  throw new Error(e);
+      }
     }
     return b ;
   }

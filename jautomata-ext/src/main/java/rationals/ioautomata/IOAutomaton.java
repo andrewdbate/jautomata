@@ -69,7 +69,7 @@ public class IOAutomaton<I extends IOTransition, T extends Builder<Object, I, T>
 				addTransition(new IOTransition(sm.get(tr.start()), lt.label, sm
 						.get(tr.end()), lt.type));
 			} catch (NoSuchStateException e) {
-				e.printStackTrace();
+				throw new Error(e);
 			}
 		}
 	}
@@ -103,7 +103,7 @@ public class IOAutomaton<I extends IOTransition, T extends Builder<Object, I, T>
 				addTransition(new IOTransition(sm.get(tr.start()), lt.label, sm
 						.get(tr.end()), lt.type));
 			} catch (NoSuchStateException e) {
-				e.printStackTrace();
+				throw new Error(e);
 			}
 		}
 
@@ -175,6 +175,7 @@ public class IOAutomaton<I extends IOTransition, T extends Builder<Object, I, T>
 				try {
 					addTransition(new IOTransition(q, i2.next(), q));
 				} catch (NoSuchStateException e) {
+					throw new Error(e);
 				}
 			}
 			alph.clear();

@@ -71,7 +71,7 @@ public class IOTransitionBuilder implements Builder<Object, IOTransition, IOTran
 		try {
 			automaton.addTransition(new IOTransition(from, label, s));
 		} catch (NoSuchStateException e) {
-			assert false;
+			throw new Error(e);
 		}
 		return this;
 	}
@@ -85,7 +85,7 @@ public class IOTransitionBuilder implements Builder<Object, IOTransition, IOTran
 		try {
 			automaton.addTransition(new IOTransition(from, label, from));
 		} catch (NoSuchStateException e) {
-			assert false;
+			throw new Error(e);
 		}
 		return this;
 	}

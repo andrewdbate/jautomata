@@ -111,7 +111,8 @@ public class RandomAutomaton<L, Tr extends Transition<L>, T extends Builder<L, T
                 try {
                     /* create transition */
                     addTransition(new Transition<L>(from, lbl, to));
-                } catch (NoSuchStateException e1) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
         }
@@ -160,7 +161,8 @@ public class RandomAutomaton<L, Tr extends Transition<L>, T extends Builder<L, T
                 try {
                     /* create transition */
                     addTransition(new Transition<>(from, lbl, to));
-                } catch (NoSuchStateException e1) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
         }

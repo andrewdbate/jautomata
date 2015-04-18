@@ -57,7 +57,7 @@ public class Mirror {
                                         : (lt.type == IOAlphabetType.OUTPUT ? IOAlphabetType.INPUT
                                                 : IOAlphabetType.INTERNAL)));
             } catch (NoSuchStateException e) {
-                e.printStackTrace();
+            	throw new Error(e);
             }
         }
         return ret;

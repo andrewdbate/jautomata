@@ -126,6 +126,7 @@ public class DeterministicTransducer extends Transducer {
             try {
                 a.addTransition(new Transition(cur, rel.getOut(), ns));
             } catch (NoSuchStateException e) {
+            	throw new Error(e);
             }
             cur = ns;
         }

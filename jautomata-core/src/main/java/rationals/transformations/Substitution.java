@@ -74,6 +74,7 @@ public class Substitution<L, Tr extends Transition<L>, T extends Builder<L, Tr, 
 				try {
 					b.addTransition(new Transition<L>(nss, lbl, nse));
 				} catch (NoSuchStateException e) {
+					throw new Error(e);
 				}
 			else
 				try {
@@ -83,7 +84,8 @@ public class Substitution<L, Tr extends Transition<L>, T extends Builder<L, Tr, 
 						insert(nss, nse, b, (Automaton<L, Tr, T>) o);
 					else
 						b.addTransition(new Transition<L>(nss, (L) morph.get(lbl), nse));
-				} catch (NoSuchStateException e1) {
+				} catch (NoSuchStateException e) {
+					throw new Error(e);
 				}
 		}
 		return b;
@@ -105,18 +107,20 @@ public class Substitution<L, Tr extends Transition<L>, T extends Builder<L, Tr, 
 		/* map states */
 		Map<State, State> map = new HashMap<State, State>();
 		for (Iterator<State> i = automaton.states().iterator(); i.hasNext();) {
-			State e = i.next();
+			State state = i.next();
 			State n = b.addState(false, false);
-			map.put(e, n);
-			if (e.isInitial())
+			map.put(state, n);
+			if (state.isInitial())
 				try {
 					b.addTransition(new Transition<L>(nss, null, n));
-				} catch (NoSuchStateException e1) {
+				} catch (NoSuchStateException e) {
+					throw new Error(e);
 				}
-			if (e.isTerminal())
+			if (state.isTerminal())
 				try {
 					b.addTransition(new Transition<L>(n, null, nse));
-				} catch (NoSuchStateException e1) {
+				} catch (NoSuchStateException e) {
+					throw new Error(e);
 				}
 
 		}
@@ -124,7 +128,8 @@ public class Substitution<L, Tr extends Transition<L>, T extends Builder<L, Tr, 
 			Transition<L> t = i.next();
 			try {
 				b.addTransition(new Transition<L>(map.get(t.start()), t.label(), map.get(t.end())));
-			} catch (NoSuchStateException x) {
+			} catch (NoSuchStateException e) {
+				throw new Error(e);
 			}
 		}
 

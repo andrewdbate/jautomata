@@ -67,9 +67,9 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
             Map<L, Set<State>> trm = instructions(a.delta(s), a);
             Iterator<Map.Entry<L, Set<State>>> it = trm.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<L, Set<State>> e = it.next();
-                L o = e.getKey();
-                Set<State> ar = e.getValue();
+                Map.Entry<L, Set<State>> entry = it.next();
+                L o = entry.getKey();
+                Set<State> ar = entry.getValue();
                 /* compute closure of arrival set */
                 ar = TransformationsToolBox.epsilonClosure(ar, a);
                 hv = new HashSet<>(ar);
@@ -82,7 +82,8 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
                 try {
                     /* create transition */
                     ret.addTransition(new Transition<L>(ns,o,ne));
-                } catch (NoSuchStateException e1) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
                 /* explore new state */
                 if(!done.contains(hv))

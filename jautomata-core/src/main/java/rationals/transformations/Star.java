@@ -48,25 +48,29 @@ public class Star<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> impl
             Transition<L> t = i2.next();
             try {
                 b.addTransition(new Transition<>(map.get(t.start()), t.label(), map.get(t.end())));
-            } catch (NoSuchStateException x) {
+            } catch (NoSuchStateException e) {
+            	throw new Error(e);
             }
             if (t.start().isInitial() && t.end().isTerminal()) {
                 try {
                     b.addTransition(new Transition<>(ni, t.label(), nt));
                     b.addTransition(new Transition<>(nt, t.label(), ni));
-                } catch (NoSuchStateException x) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             } else if (t.start().isInitial()) {
                 try {
                     b.addTransition(new Transition<>(ni, t.label(), map.get(t.end())));
                     b.addTransition(new Transition<>(nt, t.label(), map.get(t.end())));
-                } catch (NoSuchStateException x) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             } else if (t.end().isTerminal()) {
                 try {
                     b.addTransition(new Transition<>(map.get(t.start()), t.label(), nt));
                     b.addTransition(new Transition<>(map.get(t.start()), t.label(), ni));
-                } catch (NoSuchStateException x) {
+                } catch (NoSuchStateException e) {
+                	throw new Error(e);
                 }
             }
         }

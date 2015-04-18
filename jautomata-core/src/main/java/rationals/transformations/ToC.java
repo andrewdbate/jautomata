@@ -93,7 +93,8 @@ public class ToC<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
                         try {
                             c.addTransition(new Transition((State) corr.get(e),
                                     lab, (State) corr.get(x)));
-                        } catch (NoSuchStateException z) {
+                        } catch (NoSuchStateException ex) {
+                        	throw new Error(ex);
                         }
                     }
                 }
