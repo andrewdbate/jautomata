@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import rationals.Automaton;
 import rationals.ioautomata.IOTransition.IOLetter;
 import rationals.properties.Bisimilar;
-import rationals.transformations.Mix;
+import rationals.transformations.Product;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -82,7 +82,7 @@ public class IOSynchronizationTest extends TestCase {
 		a.state("q0").setInitial(true);
 		b.from("q0").send("a").go("q1").from("q1").receive("b").go("q0");
 		b.state("q0").setInitial(true);
-		Mix mix = new Mix(new IOSynchronization());
+		Product mix = new Product(new IOSynchronization());
 		Automaton transform = mix.transform(a, b);
 		IOAutomaton<IOTransition, IOTransitionBuilder> c = new IOAutomaton<IOTransition, IOTransitionBuilder>(
 				new IOTransitionBuilder());

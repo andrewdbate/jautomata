@@ -26,24 +26,21 @@ import rationals.converters.Expression;
 import rationals.converters.ToRExpression;
 import rationals.properties.isEmpty;
 
-/**
- * @version $Id: MixTest.java 10 2007-05-30 17:25:00Z oqube $
- */
-public class MixTest extends TestCase {
+public class ProductTest extends TestCase {
 
     /**
      * Constructor for MixTest.
      * 
      * @param arg0
      */
-    public MixTest(String arg0) {
+    public ProductTest(String arg0) {
         super(arg0);
     }
 
     public void testMix1() throws ConverterException {
         Automaton a = new Expression().fromString("ab*cd");
         Automaton b = new Pruner().transform(new Expression().fromString("a*ebc"));
-        Automaton c = new Mix().transform(a, b);
+        Automaton c = new Product().transform(a, b);
         String re = new ToRExpression().toString(c);
         System.out.println(re);
         assertEquals("aebcd", re);
@@ -52,7 +49,7 @@ public class MixTest extends TestCase {
     public void testMix2() throws ConverterException {
         Automaton a = new Pruner().transform(new Expression().fromString("a(bb)*e"));
         Automaton b = new Pruner().transform(new Expression().fromString("a(bbb)*e"));
-        Automaton c = new Reducer().transform(new Mix().transform(a, b));
+        Automaton c = new Reducer().transform(new Product().transform(a, b));
         System.out.println(new ToRExpression().toString(c));
         assertTrue("automata should accept word", c.accept(makeList("abbbbbbbbbbbbe")));
         assertTrue("automata should accept word", c.accept(makeList("ae")));
@@ -69,7 +66,7 @@ public class MixTest extends TestCase {
     public void testMix4() throws ConverterException {
         Automaton a = new Expression().fromString("a(b+c)(ab)*");
         Automaton b = new Expression().fromString("(a+b)*c");
-        Automaton c = new Reducer().transform(new Mix().transform(a, b));
+        Automaton c = new Reducer().transform(new Product().transform(a, b));
         String re = new ToRExpression().toString(c);
         System.out.println(re);
         assertEquals("ac", re);
@@ -78,8 +75,8 @@ public class MixTest extends TestCase {
     public void testMixCommute() throws ConverterException {
         Automaton a = new Expression().fromString("ab*cd");
         Automaton b = new Pruner().transform(new Expression().fromString("a*ebc"));
-        Automaton c = new Mix().transform(a, b);
-        Automaton d = new Mix().transform(b, a);
+        Automaton c = new Product().transform(a, b);
+        Automaton d = new Product().transform(b, a);
         String rec = new ToRExpression().toString(c);
         System.err.println("a m b =" +rec);
         String red = new ToRExpression().toString(d);
@@ -90,7 +87,7 @@ public class MixTest extends TestCase {
     public void testMixEmpty() throws ConverterException {
         Automaton a = new Expression().fromString("abc");
         Automaton b = new Expression().fromString("acb");
-        Automaton c = new Mix().transform(a, b);
+        Automaton c = new Product().transform(a, b);
         assertTrue(new isEmpty().test(c));
     }
 

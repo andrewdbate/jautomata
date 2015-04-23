@@ -28,9 +28,8 @@ import java.util.Set;
  * word given a target letter.
  * 
  * @author bailly
- * @version $Id: MixPlay.java 2 2006-08-24 14:41:48Z oqube $
  */
-public class MixPlay<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements AutomatonRunner {
+public class ProductPlay<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements AutomatonRunner {
 
     private static class MixException extends Exception {
 
@@ -70,7 +69,7 @@ public class MixPlay<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> i
      * 
      * @param autos a List of automaton objects
      */
-    public MixPlay(List<Automaton<L, Tr, T>> autos) {
+    public ProductPlay(List<Automaton<L, Tr, T>> autos) {
         this.autos = autos;
         this.sync = new DefaultSynchronization<>();
     }
@@ -79,7 +78,7 @@ public class MixPlay<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> i
      * Construct an empty mix.
      *
      */
-    public MixPlay() {
+    public ProductPlay() {
         this.autos = new ArrayList<>();
         this.sync = new DefaultSynchronization<>();
     }

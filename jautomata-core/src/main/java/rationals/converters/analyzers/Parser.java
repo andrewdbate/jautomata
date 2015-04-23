@@ -21,7 +21,7 @@ import rationals.Builder;
 import rationals.Transition;
 import rationals.converters.ConverterException;
 import rationals.transformations.Concatenation;
-import rationals.transformations.Mix;
+import rationals.transformations.Product;
 import rationals.transformations.Reducer;
 import rationals.transformations.Shuffle;
 import rationals.transformations.Star;
@@ -158,7 +158,7 @@ public class Parser<Tr extends Transition<String>, T extends Builder<String, Tr,
 		lexico.read() ;
 		Automaton<String, Tr, T> a = S() ;
 		Automaton<String, Tr, T> b = TS() ;
-		return new Reducer<String, Tr, T>().transform(new Mix<String, Tr, T>().transform(a , b)) ;
+		return new Reducer<String, Tr, T>().transform(new Product<String, Tr, T>().transform(a , b)) ;
 	  }
       case Lexer.STAR :
       case Lexer.ITERATION :

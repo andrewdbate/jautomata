@@ -24,11 +24,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author nono
  * @version $Id: TransformerTest.java 2 2006-08-24 14:41:48Z oqube $
  */
 public class TransformerTest extends TestCase {
 
+	// WARNING: hard-coded Strings of class names occur in this file
+	
     private Automaton aut;
 
     private static final File tmp = new File(TransformerTest.class.getProtectionDomain().getCodeSource().getLocation().getFile());
@@ -113,7 +114,7 @@ public class TransformerTest extends TestCase {
     }
     
     public void testBinary() throws FileNotFoundException, IOException {
-        String[] args = new String[]{"Mix","-o",out.getAbsolutePath(),test1.getAbsolutePath(),test2.getAbsolutePath()};
+        String[] args = new String[]{"Product","-o",out.getAbsolutePath(),test1.getAbsolutePath(),test2.getAbsolutePath()};
         /* collect output */
         ByteArrayOutputStream bos;
         Transform.main(args);

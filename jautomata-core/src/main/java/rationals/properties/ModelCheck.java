@@ -23,7 +23,7 @@ import rationals.Automaton;
 import rationals.Builder;
 import rationals.Transition;
 import rationals.transformations.Complement;
-import rationals.transformations.Mix;
+import rationals.transformations.Product;
 import rationals.transformations.Pruner;
 
 /**
@@ -61,7 +61,7 @@ public class ModelCheck<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>
     	alphabet.addAll(a.alphabet());
     	alphabet.addAll(b.alphabet());
         Automaton<L, Tr, T> ca = new Complement<L, Tr, T>(alphabet).transform(a);
-        counterExamples = new Pruner<L, Tr, T>().transform(new Mix<L, Tr, T>().transform(ca, b));
+        counterExamples = new Pruner<L, Tr, T>().transform(new Product<L, Tr, T>().transform(ca, b));
         if (new isEmpty<L, Tr, T>().test(counterExamples))
             return true;
         else

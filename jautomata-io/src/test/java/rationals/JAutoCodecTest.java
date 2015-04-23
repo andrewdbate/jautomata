@@ -21,7 +21,7 @@ import rationals.converters.ConverterException;
 import rationals.converters.DotCodec;
 import rationals.converters.Expression;
 import rationals.converters.JAutoCodec;
-import rationals.transformations.Mix;
+import rationals.transformations.Product;
 import rationals.transformations.Morphism;
 import rationals.transformations.Pruner;
 
@@ -68,7 +68,7 @@ public class JAutoCodecTest extends TestCase {
         Automaton a = new Pruner().transform(new Expression().fromString("abc"));
         Automaton b = new Pruner().transform(new Expression().fromString("def"));
 
-        Automaton mixed = new Pruner().transform(new Mix().transform(a, b));
+        Automaton mixed = new Pruner().transform(new Product().transform(a, b));
 
         Map map = new HashMap();
         map.put("a", "r1 <- x");

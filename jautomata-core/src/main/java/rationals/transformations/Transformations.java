@@ -34,6 +34,6 @@ public class Transformations {
    * @return a new {@link Automaton} instance.
    */
   public static Automaton miniMix(Automaton a, Automaton b, Synchronization synchronization) {
-    return new Reducer().transform(new Mix(synchronization).transform(a, b));
+    return new Reducer().transform(new Product(synchronization).transform(a, b));
   }
 }

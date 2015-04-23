@@ -37,7 +37,7 @@ import java.util.*;
  * @author Arnaud Bailly
  * @version 22032002
  */
-public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements BinaryTransformation<L, Tr, T> {
+public class Product<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements BinaryTransformation<L, Tr, T> {
 
 	private Synchronization<L> synchronization;
 
@@ -48,7 +48,7 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 	 * @see rationals.DefaultSynchronization
 	 * @see rationals.Synchronization
 	 */
-	public Mix() {
+	public Product() {
 		this.synchronization = new DefaultSynchronization<>();
 	}
 
@@ -58,17 +58,10 @@ public class Mix<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> imple
 	 * @param synch
 	 *            a Synchronization object. Must not be null.
 	 */
-	public Mix(Synchronization<L> synch) {
+	public Product(Synchronization<L> synch) {
 		this.synchronization = synch;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * rationals.transformations.BinaryTransformation#transform(rationals.Automaton
-	 * , rationals.Automaton)
-	 */
 	public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b) {
 		Automaton<L, Tr, T> ret = new Automaton<L, Tr, T>();
 		// FIXME: Potentially unsafe cast, but adding generics reveals an inconsistency in the APIs 

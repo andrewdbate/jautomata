@@ -41,13 +41,13 @@ import java.util.Set;
  * 
  * @author Arnaud Bailly
  * @version $Id: Shuffle.java 2 2006-08-24 14:41:48Z oqube $
- * @see Mix
+ * @see Product
  */
 public class Shuffle<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>> implements BinaryTransformation<L, Tr, T> {
 
     public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a, Automaton<L, Tr, T> b) {
 
-        Mix<L, Tr, T> mix = new Mix<>(new Synchronization<L>() {
+        Product<L, Tr, T> mix = new Product<>(new Synchronization<L>() {
         	@Override
             public L synchronize(L t1, L t2) {
                 return null;

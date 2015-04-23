@@ -27,7 +27,7 @@ import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
 import rationals.transformations.InverseMorphism;
-import rationals.transformations.Mix;
+import rationals.transformations.Product;
 import rationals.transformations.Morphism;
 
 /**
@@ -89,7 +89,7 @@ public class TransducerNivat extends Automaton implements Transduction {
 		/*
 		 * compute intersection with this language
 		 */
-		b = new Mix().transform(b,this);
+		b = new Product().transform(b,this);
 		/*
 		 * compute output morphism
 		 */

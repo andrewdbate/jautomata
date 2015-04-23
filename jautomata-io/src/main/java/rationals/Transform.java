@@ -37,9 +37,8 @@ import rationals.transformations.UnaryTransformation;
  * the format supported by {@see rationals.converters.Codecs}, either 
  * from standard input or from given files, and applies an arbitrary 
  * transformation, either unary or binary, on the automata, then
- * output thr result on standard out or in a file.
+ * output the result on standard out or in a file.
  * 
- * @author nono
  * @version $Id: Transform.java 2 2006-08-24 14:41:48Z oqube $
  */
 public class Transform {

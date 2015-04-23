@@ -25,24 +25,13 @@ import java.util.Set;
  * Default synchronization scheme for standard automaton. This class
  * synchronizes the labels of two transitions if they are equal as returned by
  * {@see java.lang.Object#equals(java.lang.Object)}.
- * 
- * @version $Id: DefaultSynchronization.java 2 2006-08-24 14:41:48Z oqube $
  */
 public class DefaultSynchronization<L> implements Synchronization<L> {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see rationals.Synchronization#synchronize(rationals.Transition,
-     *      rationals.Transition)
-     */
     public L synchronize(L t1, L t2) {
         return t1 == null ? null : (t1.equals(t2) ? t1 : null);
     }
 
-    /* (non-Javadoc)
-     * @see rationals.Synchronization#synchronizing(java.util.Set, java.util.Set)
-     */
     public Set<L> synchronizable(Set<L> a, Set<L> b) {
         Set<L> r = new HashSet<>(a);
         r.retainAll(b);
@@ -51,7 +40,6 @@ public class DefaultSynchronization<L> implements Synchronization<L> {
 
     /*
      * TO VERIFY (non-Javadoc)
-     * @see rationals.Synchronization#synchronizing(java.util.Collection)
      */
     public Set<L> synchronizing(Collection<Set<L>> alphabets) {
         Set<L> niou = new HashSet<>();

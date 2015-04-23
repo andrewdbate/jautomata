@@ -68,7 +68,7 @@ public class MixPlayTest extends TestCase {
         Automaton b = new Pruner().transform(new Expression()
                 .fromString("a(bb)^e"));
         //      Automaton c = new Pruner().transform(new Expression().fromString("bdde"));      
-        MixPlay mp = new MixPlay();
+        ProductPlay mp = new ProductPlay();
         mp.addAutomaton(b);
         mp.addAutomaton(a);
         //      mp.addAutomaton(c);
@@ -85,7 +85,7 @@ public class MixPlayTest extends TestCase {
         Automaton b = new Pruner().transform(new Expression()
                 .fromString("a(bb)*e"));
         //      Automaton c = new Pruner().transform(new Expression().fromString("bdde"));      
-        MixPlay mp = new MixPlay();
+        ProductPlay mp = new ProductPlay();
         mp.addAutomaton(b);
         mp.addAutomaton(a);
         //      mp.addAutomaton(c);
@@ -101,7 +101,7 @@ public class MixPlayTest extends TestCase {
         Automaton b = new Pruner().transform(new Expression()
                 .fromString("abbe"));
         //      Automaton c = new Pruner().transform(new Expression().fromString("bdde"));      
-        MixPlay mp = new MixPlay();
+        ProductPlay mp = new ProductPlay();
         mp.addAutomaton(b);
         mp.addAutomaton(a);
         //      mp.addAutomaton(c);
@@ -116,7 +116,7 @@ public class MixPlayTest extends TestCase {
         Automaton b = new Pruner().transform(new Expression()
                 .fromString("a(bb)*e"));
         //      Automaton c = new Pruner().transform(new Expression().fromString("bdde"));      
-        MixPlay mp = new MixPlay();
+        ProductPlay mp = new ProductPlay();
         mp.addAutomaton(b);
         mp.addAutomaton(a);
         //      mp.addAutomaton(c);
