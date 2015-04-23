@@ -22,43 +22,33 @@ import junit.framework.TestCase;
 import rationals.Automaton;
 import rationals.State;
 import rationals.Transition;
+import rationals.TransitionBuilder;
 import rationals.properties.ContainsEpsilon;
 
-/**
- * @author nono
- * @version $Id: StarTest.java 2 2006-08-24 14:41:48Z oqube $
- */
 public class StarTest extends TestCase {
 
-    private Automaton automaton;
+    private Automaton<String, Transition<String>, TransitionBuilder<String>> automaton;
 
-    /*
-     * @see TestCase#setUp()
-     */
     protected void setUp() throws Exception {
         super.setUp();
-        automaton = new Automaton();
-        State s1 = automaton.addState(true,false);
-        State s2 = automaton.addState(false,false);
-        State s3 = automaton.addState(false,true);
-        automaton.addTransition(new Transition(s1,"a",s2));
-        automaton.addTransition(new Transition(s2,"b",s3));        
+        automaton = new Automaton<>();
+        State s1 = automaton.addState(true, false);
+        State s2 = automaton.addState(false, false);
+        State s3 = automaton.addState(false, true);
+        automaton.addTransition(new Transition<>(s1,"a",s2));
+        automaton.addTransition(new Transition<>(s2,"b",s3));        
     }
 
-    /**
-     * Constructor for StarTest.
-     * @param arg0
-     */
     public StarTest(String arg0) {
         super(arg0);
     }
 
     public void test() {
-        Star star = new Star();
-        Automaton b = star.transform(automaton);
-        assertTrue(new ContainsEpsilon().test(b));
-        Object[] word = new Object[]{"a","b","a","b"};
-        Object[] word1 = new Object[]{"a","b","a","b","a"};
+        Star<String, Transition<String>, TransitionBuilder<String>> star = new Star<>();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = star.transform(automaton);
+        assertTrue(new ContainsEpsilon<String, Transition<String>, TransitionBuilder<String>>().test(b));
+        String[] word = new String[]{"a","b","a","b"};
+        String[] word1 = new String[]{"a","b","a","b","a"};
         assertTrue(b.accept(Arrays.asList(word)));
         assertTrue(!b.accept(Arrays.asList(word1)));
     }

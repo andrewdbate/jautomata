@@ -16,14 +16,14 @@
  */
 package rationals.transformations;
 
-import junit.framework.TestCase;
-import rationals.Automaton;
-import rationals.converters.Expression;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
+//import junit.framework.TestCase;
+//import rationals.Automaton;
+//import rationals.converters.Expression;
+//
+//import java.util.HashSet;
+//import java.util.Set;
+//
+//import static java.util.Arrays.asList;
 
 
 //class PartialCommutationTes extends TestCase {

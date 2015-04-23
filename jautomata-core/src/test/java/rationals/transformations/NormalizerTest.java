@@ -22,77 +22,66 @@ import junit.framework.TestCase;
 import rationals.Automaton;
 import rationals.State;
 import rationals.Transition;
+import rationals.TransitionBuilder;
 import rationals.properties.ContainsEpsilon;
 
-/**
- * @author nono
- * @version $Id: NormalizerTest.java 2 2006-08-24 14:41:48Z oqube $
- */
 public class NormalizerTest extends TestCase {
 
-    private Automaton automaton;
+    private Automaton<String, Transition<String>, TransitionBuilder<String>> automaton;
 
-    /*
-     * @see TestCase#setUp()
-     */
     protected void setUp() throws Exception {
         super.setUp();
-        automaton = new Automaton();
+        automaton = new Automaton<>();
         State s1 = automaton.addState(true, true);
         State s2 = automaton.addState(false, false);
         State s3 = automaton.addState(false, true);
-        automaton.addTransition(new Transition(s1, "c", s1));
-        automaton.addTransition(new Transition(s1, "a", s2));
-        automaton.addTransition(new Transition(s2, "b", s3));
-        automaton.addTransition(new Transition(s3, "a", s2));
-        automaton.addTransition(new Transition(s2, "b", s1));
+        automaton.addTransition(new Transition<>(s1, "c", s1));
+        automaton.addTransition(new Transition<>(s1, "a", s2));
+        automaton.addTransition(new Transition<>(s2, "b", s3));
+        automaton.addTransition(new Transition<>(s3, "a", s2));
+        automaton.addTransition(new Transition<>(s2, "b", s1));
     }
 
-    /**
-     * Constructor for NormalizerTest.
-     * 
-     * @param arg0
-     */
     public NormalizerTest(String arg0) {
         super(arg0);
     }
 
     public void test1() {
-        Normalizer norm = new Normalizer();
-        Automaton b = norm.transform(automaton);
-        assertTrue(new ContainsEpsilon().test(b));
-        Object[] word = new Object[] { "a", "b", "a", "b" };
+        Normalizer<String, Transition<String>, TransitionBuilder<String>> norm = new Normalizer<>();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = norm.transform(automaton);
+        assertTrue(new ContainsEpsilon<String, Transition<String>, TransitionBuilder<String>>().test(b));
+        String[] word = new String[] { "a", "b", "a", "b" };
         assertTrue(b.accept(Arrays.asList(word)));
     }
 
     public void test2() {
-        Normalizer norm = new Normalizer();
-        Automaton b = norm.transform(automaton);
-        assertTrue(new ContainsEpsilon().test(b));
-        Object[] word3 = new Object[] { };
+        Normalizer<String, Transition<String>, TransitionBuilder<String>> norm = new Normalizer<>();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = norm.transform(automaton);
+        assertTrue(new ContainsEpsilon<String, Transition<String>, TransitionBuilder<String>>().test(b));
+        String[] word3 = new String[] { };
         assertTrue(b.accept(Arrays.asList(word3)));
     }
     public void test3() {
-        Normalizer norm = new Normalizer();
-        Automaton b = norm.transform(automaton);
-        assertTrue(new ContainsEpsilon().test(b));
-        Object[] word2 = new Object[] { "c","c","a", "b", "a", "b", "a", "b" };
+        Normalizer<String, Transition<String>, TransitionBuilder<String>> norm = new Normalizer<>();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = norm.transform(automaton);
+        assertTrue(new ContainsEpsilon<String, Transition<String>, TransitionBuilder<String>>().test(b));
+        String[] word2 = new String[] { "c","c","a", "b", "a", "b", "a", "b" };
         assertTrue(b.accept(Arrays.asList(word2)));
     }
 
     public void test4() {
-        Normalizer norm = new Normalizer();
-        Automaton b = norm.transform(automaton);
-        assertTrue(new ContainsEpsilon().test(b));
-        Object[] word1 = new Object[] { "a", "b", "a", "b", "a" };
+        Normalizer<String, Transition<String>, TransitionBuilder<String>> norm = new Normalizer<>();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = norm.transform(automaton);
+        assertTrue(new ContainsEpsilon<String, Transition<String>, TransitionBuilder<String>>().test(b));
+        String[] word1 = new String[] { "a", "b", "a", "b", "a" };
         assertTrue(!b.accept(Arrays.asList(word1)));
     }
 
     public void test5() {
-        Normalizer norm = new Normalizer();
-        Automaton b = norm.transform(automaton);
-        assertTrue(new ContainsEpsilon().test(b));
-        Object[] word2 = new Object[] { "c","c","c"};
+        Normalizer<String, Transition<String>, TransitionBuilder<String>> norm = new Normalizer<>();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = norm.transform(automaton);
+        assertTrue(new ContainsEpsilon<String, Transition<String>, TransitionBuilder<String>>().test(b));
+        String[] word2 = new String[] { "c","c","c"};
         assertTrue(b.accept(Arrays.asList(word2)));
     }
 }

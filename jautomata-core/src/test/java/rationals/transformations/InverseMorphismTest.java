@@ -18,6 +18,8 @@ package rationals.transformations;
 
 import junit.framework.TestCase;
 import rationals.Automaton;
+import rationals.Transition;
+import rationals.TransitionBuilder;
 import rationals.converters.ConverterException;
 import rationals.converters.Expression;
 
@@ -33,30 +35,30 @@ public class InverseMorphismTest extends TestCase {
 	}
 
 	public void test01SimpleMap() throws ConverterException {
-		Automaton a = new Expression().fromString("(abc)*");
-		Map m = new HashMap();
+		Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("(abc)*");
+		Map<String, String> m = new HashMap<>();
 		m.put("a", "b");
 		m.put("b", "c");
 		m.put("c", "a");
 		InverseMorphism im = new InverseMorphism(m);
-		Automaton res = im.transform(a);
-		List exp = Arrays.asList(new String[] { "c", "a", "b", "c", "a", "b" });
+		Automaton<String, Transition<String>, TransitionBuilder<String>> res = im.transform(a);
+		List<String> exp = Arrays.asList(new String[] { "c", "a", "b", "c", "a", "b" });
 		assertTrue("Does not accept 'cabcab'", res.accept(exp));
 		exp = Arrays.asList(new String[] { "a", "b", "c" });
 		assertTrue("Does accept 'abc'", !res.accept(exp));
 	}
 
 	public void test02EpsilonMapping() throws ConverterException {
-		Automaton a = new Expression().fromString("(abc)*a");
-		Map m = new HashMap();
+		Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("(abc)*a");
+		Map<String, String> m = new HashMap<>();
 		m.put("a", "b");
 		m.put("d", null);
 		m.put("b", "c");
 		m.put("c", "a");
 		InverseMorphism im = new InverseMorphism(m);
-		Automaton res = im.transform(a);
+		Automaton<String, Transition<String>, TransitionBuilder<String>> res = im.transform(a);
 		System.err.println(res);
-		List exp = Arrays.asList(new String[] { "c", "a", "b", "d", "d", "c",
+		List<String> exp = Arrays.asList(new String[] { "c", "a", "b", "d", "d", "c",
 				"a", "b", "c" });
 		assertTrue("Does not accept 'cabddcabc'", res.accept(exp));
 		exp = Arrays.asList(new String[] { "d", "d", "c" });
@@ -64,28 +66,28 @@ public class InverseMorphismTest extends TestCase {
 	}
 
 	public void test03MultipleMap() throws ConverterException {
-		Automaton a = new Expression().fromString("(abc)*a");
-		Map m = new HashMap();
+		Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("(abc)*a");
+		Map<String, String> m = new HashMap<>();
 		m.put("a", "b");
 		m.put("b", "c");
 		m.put("c", "b");
 		InverseMorphism im = new InverseMorphism(m);
-		Automaton res = im.transform(a);
+		Automaton<String, Transition<String>, TransitionBuilder<String>> res = im.transform(a);
 		System.err.println(res);
-		List exp = Arrays.asList(new String[] { "a", "a", "b", "a", "c", "b","a" });
+		List<String> exp = Arrays.asList(new String[] { "a", "a", "b", "a", "c", "b","a" });
 		assertTrue("Does not accept 'aabacba'", res.accept(exp));
 	}
 
 	public void test04AlphMorph() throws ConverterException {
-		Automaton a = new Expression().fromString("(abc)*");
-		Map m = new HashMap();
+		Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("(abc)*");
+		Map<String, String> m = new HashMap<>();
 		m.put("a", "b");
 		m.put("b", "c");
 		m.put(null, null );
 		m.put("c", "a");
 		InverseMorphism im = new InverseMorphism(m);
-		Automaton res = im.transform(a);
-		List exp = Arrays.asList(new String[] { "c", "a", "b", "c", "a", "b" });
+		Automaton<String, Transition<String>, TransitionBuilder<String>> res = im.transform(a);
+		List<String> exp = Arrays.asList(new String[] { "c", "a", "b", "c", "a", "b" });
 		assertTrue("Does not accept 'cabcab'", res.accept(exp));
 		exp = Arrays.asList(new String[] { "a", "b", "c" });
 		assertTrue("Does accept 'abc'", !res.accept(exp));

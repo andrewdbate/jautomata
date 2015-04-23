@@ -22,51 +22,41 @@ import junit.framework.TestCase;
 import rationals.Automaton;
 import rationals.State;
 import rationals.Transition;
+import rationals.TransitionBuilder;
 
-/**
- * @author nono
- * @version $Id: ConcatenationTest.java 2 2006-08-24 14:41:48Z oqube $
- */
 public class ConcatenationTest extends TestCase {
 
-    private Automaton a;
-    private Automaton b;
+    private Automaton<String, Transition<String>, TransitionBuilder<String>> a;
+    private Automaton<String, Transition<String>, TransitionBuilder<String>> b;
 
-    /*
-     * @see TestCase#setUp()
-     */
     protected void setUp() throws Exception {
         super.setUp();
-        a = new Automaton();
+        a = new Automaton<>();
         State s1 = a.addState(true, false);
         State s2 = a.addState(false, false);
         State s3 = a.addState(false, true);
-        a.addTransition(new Transition(s1, "a", s2));
-        a.addTransition(new Transition(s2, "b", s3));
-        b = new Automaton();
+        a.addTransition(new Transition<>(s1, "a", s2));
+        a.addTransition(new Transition<>(s2, "b", s3));
+        b = new Automaton<>();
         s1 = b.addState(true, true);
         s2 = b.addState(false, false);
         s3 = b.addState(false, true);
-        b.addTransition(new Transition(s1, "c", s1));
-        b.addTransition(new Transition(s1, "a", s2));
-        b.addTransition(new Transition(s2, "b", s3));
+        b.addTransition(new Transition<>(s1, "c", s1));
+        b.addTransition(new Transition<>(s1, "a", s2));
+        b.addTransition(new Transition<>(s2, "b", s3));
         
     }
 
-    /**
-     * Constructor for ConcatenationTest.
-     * @param arg0
-     */
     public ConcatenationTest(String arg0) {
         super(arg0);
     }
 
     public void test1() {
-        Concatenation conc = new Concatenation();
-        Automaton c = conc.transform(a,b);
-        Object[] word = new Object[] { "a", "b", "c" , "c" , "a", "b" };
-        Object[] word1 = new Object[] { "a", "b", "a", "b" };
-        Object[] word2 = new Object[] { "a", "b", "c" , "a"};
+        Concatenation<String, Transition<String>, TransitionBuilder<String>> conc = new Concatenation<>();
+        Automaton<String, Transition<String>, TransitionBuilder<String>> c = conc.transform(a,b);
+        String[] word = new String[] { "a", "b", "c" , "c" , "a", "b" };
+        String[] word1 = new String[] { "a", "b", "a", "b" };
+        String[] word2 = new String[] { "a", "b", "c" , "a"};
         assertTrue(c.accept(Arrays.asList(word)));
         assertTrue(c.accept(Arrays.asList(word1)));
         assertTrue(!c.accept(Arrays.asList(word2)));

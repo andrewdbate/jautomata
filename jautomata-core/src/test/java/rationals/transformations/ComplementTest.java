@@ -18,30 +18,24 @@ package rationals.transformations;
 
 import junit.framework.TestCase;
 import rationals.Automaton;
+import rationals.Transition;
+import rationals.TransitionBuilder;
 import rationals.converters.ConverterException;
 import rationals.converters.Expression;
 import rationals.converters.ToRExpression;
 
-/**
- * @author nono
- * @version $Id: ComplementTest.java 2 2006-08-24 14:41:48Z oqube $
- */
 public class ComplementTest extends TestCase {
 
-    /**
-     * @param arg0
-     */
     public ComplementTest(String arg0) {
         super(arg0);
     }
     
     public void testComp() throws ConverterException {
-        Automaton a = new Pruner().transform(new Expression()
-                .fromString("a(bb)*e"));
-        Automaton c= new ToDFA().transform(new Complement().transform(a));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Pruner<String, Transition<String>, TransitionBuilder<String>>().transform(new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a(bb)*e"));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> c = new ToDFA<String, Transition<String>, TransitionBuilder<String>>().transform(new Complement<String, Transition<String>, TransitionBuilder<String>>().transform(a));
         System.out.println(c);
-        String re;
-        System.out.println(re =new ToRExpression().toString(c));
+        String re = new ToRExpression<Transition<String>, TransitionBuilder<String>>().toString(c);
+        System.out.println(re);
     }
 
 }

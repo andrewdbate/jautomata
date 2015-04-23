@@ -21,6 +21,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import rationals.Automaton;
+import rationals.Transition;
+import rationals.TransitionBuilder;
 import rationals.converters.ConverterException;
 import rationals.converters.Expression;
 import rationals.converters.ToRExpression;
@@ -28,67 +30,62 @@ import rationals.properties.isEmpty;
 
 public class ProductTest extends TestCase {
 
-    /**
-     * Constructor for MixTest.
-     * 
-     * @param arg0
-     */
     public ProductTest(String arg0) {
         super(arg0);
     }
 
     public void testMix1() throws ConverterException {
-        Automaton a = new Expression().fromString("ab*cd");
-        Automaton b = new Pruner().transform(new Expression().fromString("a*ebc"));
-        Automaton c = new Product().transform(a, b);
-        String re = new ToRExpression().toString(c);
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("ab*cd");
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Pruner<String, Transition<String>, TransitionBuilder<String>>().transform(new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a*ebc"));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> c = new Product<String, Transition<String>, TransitionBuilder<String>>().transform(a, b);
+        String re = new ToRExpression<Transition<String>, TransitionBuilder<String>>().toString(c);
         System.out.println(re);
         assertEquals("aebcd", re);
     }
 
     public void testMix2() throws ConverterException {
-        Automaton a = new Pruner().transform(new Expression().fromString("a(bb)*e"));
-        Automaton b = new Pruner().transform(new Expression().fromString("a(bbb)*e"));
-        Automaton c = new Reducer().transform(new Product().transform(a, b));
-        System.out.println(new ToRExpression().toString(c));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Pruner<String, Transition<String>, TransitionBuilder<String>>().transform(new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a(bb)*e"));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Pruner<String, Transition<String>, TransitionBuilder<String>>().transform(new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a(bbb)*e"));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> c = new Reducer<String, Transition<String>, TransitionBuilder<String>>().transform(new Product<String, Transition<String>, TransitionBuilder<String>>().transform(a, b));
+        System.out.println(new ToRExpression<Transition<String>, TransitionBuilder<String>>().toString(c));
         assertTrue("automata should accept word", c.accept(makeList("abbbbbbbbbbbbe")));
         assertTrue("automata should accept word", c.accept(makeList("ae")));
         assertTrue("automata should not accept word", !c.accept(makeList("abbe")));
     }
 
-    private List<Object> makeList(String string) {
-      List<Object> l = new ArrayList<Object>();
-      for(int i=0;i<string.length();i++)
+    private List<String> makeList(String string) {
+      List<String> l = new ArrayList<>();
+      for(int i = 0; i < string.length(); i++)
         l.add(string.charAt(i)+"");
       return l;
     }
 
     public void testMix4() throws ConverterException {
-        Automaton a = new Expression().fromString("a(b+c)(ab)*");
-        Automaton b = new Expression().fromString("(a+b)*c");
-        Automaton c = new Reducer().transform(new Product().transform(a, b));
-        String re = new ToRExpression().toString(c);
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a(b+c)(ab)*");
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("(a+b)*c");
+        Automaton<String, Transition<String>, TransitionBuilder<String>> c = new Reducer<String, Transition<String>, TransitionBuilder<String>>().transform(new Product<String, Transition<String>, TransitionBuilder<String>>().transform(a, b));
+        String re = new ToRExpression<Transition<String>, TransitionBuilder<String>>().toString(c);
         System.out.println(re);
         assertEquals("ac", re);
     }
 
     public void testMixCommute() throws ConverterException {
-        Automaton a = new Expression().fromString("ab*cd");
-        Automaton b = new Pruner().transform(new Expression().fromString("a*ebc"));
-        Automaton c = new Product().transform(a, b);
-        Automaton d = new Product().transform(b, a);
-        String rec = new ToRExpression().toString(c);
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("ab*cd");
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Pruner<String, Transition<String>, TransitionBuilder<String>>().transform(new Expression<Transition<String>, TransitionBuilder<String>>().fromString("a*ebc"));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> c = new Product<String, Transition<String>, TransitionBuilder<String>>().transform(a, b);
+        Automaton<String, Transition<String>, TransitionBuilder<String>> d = new Product<String, Transition<String>, TransitionBuilder<String>>().transform(b, a);
+        String rec = new ToRExpression<Transition<String>, TransitionBuilder<String>>().toString(c);
         System.err.println("a m b =" +rec);
-        String red = new ToRExpression().toString(d);
+        String red = new ToRExpression<Transition<String>, TransitionBuilder<String>>().toString(d);
         System.err.println("b m a =" +red);
         assertEquals(rec,red);
     }
 
     public void testMixEmpty() throws ConverterException {
-        Automaton a = new Expression().fromString("abc");
-        Automaton b = new Expression().fromString("acb");
-        Automaton c = new Product().transform(a, b);
-        assertTrue(new isEmpty().test(c));
+        Automaton<String, Transition<String>, TransitionBuilder<String>> a = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("abc");
+        Automaton<String, Transition<String>, TransitionBuilder<String>> b = new Expression<Transition<String>, TransitionBuilder<String>>().fromString("acb");
+        Automaton<String, Transition<String>, TransitionBuilder<String>> c = new Product<String, Transition<String>, TransitionBuilder<String>>().transform(a, b);
+        assertTrue(new isEmpty<String, Transition<String>, TransitionBuilder<String>>().test(c));
     }
 
 }
