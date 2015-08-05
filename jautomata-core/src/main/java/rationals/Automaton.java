@@ -247,8 +247,6 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * Returns the set of states <em>Q</em> associated with this automaton.
 	 * 
 	 * @return the set of states <em>Q</em> associated with this automaton.
-	 *         Objects which are contained in this set are instances of class
-	 *         <tt>State</tt>.
 	 * @see State
 	 */
 	public Set<State> states() {
@@ -260,8 +258,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * automaton.
 	 * 
 	 * @return the set of initial states <em>I</em> associated with this
-	 *         automaton. Objects which are contained in this set are instances
-	 *         of class <tt>State</tt>.
+	 *         automaton
 	 * @see State
 	 */
 	public Set<State> initials() {
@@ -273,8 +270,6 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * automaton.
 	 * 
 	 * @return set of terminal states <em>T</em> associated with this automaton.
-	 *         Objects which are contained in this set are instances of class
-	 *         <tt>State</tt>.
 	 * @see State
 	 */
 	public Set<State> terminals() {
@@ -311,8 +306,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * 
 	 * @return the set of all accessible states in this automaton. A state
 	 *         <em>s</em> is accessible if there exists a path from an initial
-	 *         state to <em>s</em>. Objects which are contained in this set are
-	 *         instances of class <tt>State</tt>.
+	 *         state to <em>s</em>.
 	 * @see State
 	 */
 	public Set<State> accessibleStates() {
@@ -360,8 +354,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * 
 	 * @return the set of all co-accessible states in this automaton. A state
 	 *         <em>s</em> is co-accessible if there exists a path from this
-	 *         state <em>s</em> to a terminal state. Objects which are contained
-	 *         in this set are instances of class <tt>State</tt>.
+	 *         state <em>s</em> to a terminal state.
 	 * @see State
 	 */
 	public Set<State> coAccessibleStates() {
@@ -376,8 +369,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 *         this automaton. A state <em>s</em> is accessible if there exists
 	 *         a path from an initial state to <em>s</em>. A state <em>s</em> is
 	 *         co-accessible if there exists a path from this state <em>s</em>
-	 *         to a terminal state. Objects which are contained in this set are
-	 *         instances of class <tt>State</tt>.
+	 *         to a terminal state.
 	 * @see State
 	 */
 	public Set<State> accessibleAndCoAccessibleStates() {
@@ -411,8 +403,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	/**
 	 * Returns the set of all transitions of this automaton
 	 * 
-	 * @return the set of all transitions of this automaton Objects which are
-	 *         contained in this set are instances of class <tt>Transition</tt>.
+	 * @return the set of all transitions of this automaton
 	 * @see Transition
 	 */
 	public Set<Transition<L>> delta() {
@@ -431,8 +422,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * @param label
 	 *            a label used in this automaton.
 	 * @return the set of all transitions of this automaton starting from state
-	 *         <tt>state</tt> and labelled by <tt>label</tt>. Objects which are
-	 *         contained in this set are instances of class <tt>Transition</tt>.
+	 *         <tt>state</tt> and labelled by <tt>label</tt>
 	 * @see Transition
 	 */
 	public Set<Transition<L>> delta(State state, L label) {
@@ -522,9 +512,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	 * 
 	 * @return the set of all transitions of the reverse of this automaton. A
 	 *         reverse of an automaton <em>A = (X , Q , I , T , D)</em> is the
-	 *         automaton <em>A' = (X , Q , T , I , D')</em> where <em>D'</em> is the set <em>{ (q , l , q') | (q' , l , q) in D}</em>. Objects
-	 *         which are contained in this set are instances of class
-	 *         <tt>Transition</tt>.
+	 *         automaton <em>A' = (X , Q , T , I , D')</em> where <em>D'</em> is the set <em>{ (q , l , q') | (q' , l , q) in D}</em>.
 	 * @see Transition
 	 */
 	@Override
