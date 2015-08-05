@@ -46,8 +46,8 @@ import java.util.*;
  * 
  * @author yroos@lifl.fr
  * @author bailly@lifl.fr
- * @version $Id: Automaton.java 10 2007-05-30 17:25:00Z oqube $
- * @see Transition State
+ * @see Transition
+ * @see State
  */
 public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 		implements Acceptor<L>, StateMachine<L, Tr, T>, Rational<L>, Cloneable {
@@ -98,7 +98,6 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	// values are sets of transitions.
 	private Map<Key, Set<Transition<L>>> reverse;
 
-	// bonte
 	private StateFactory<L, Tr, T> stateFactory = new DefaultStateFactory<>(this);
 
     private StateLabels stateLabels = new StateLabels();
@@ -325,11 +324,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 		return access(states, transitions);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see rationals.Rational#accessibleStates(rationals.State)
-	 */
+	@Override
 	public Set<State> accessibleStates(State state) {
 		Set<State> s = stateFactory.stateSet();
 		s.add(state);
@@ -650,11 +645,10 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 		}
 
 		public boolean equals(Object o) {
-			if (o == null || !(o instanceof Automaton.Key))
+			if (!(o instanceof Automaton.Key))
 				return false;
 			Key t = (Key) o;
-			boolean ret = (l == null ? t.l == null : l.equals(t.l))	&& (s == null ? t.s == null : s.equals(t.s));
-			return ret;
+			return (l == null ? t.l == null : l.equals(t.l))	&& (s == null ? t.s == null : s.equals(t.s));
 		}
 
 		public int hashCode() {
@@ -709,11 +703,6 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 		return s;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see rationals.Acceptor#accept(java.util.List)
-	 */
 	@Override
 	public boolean accept(List<L> word) {
 		Set<State> s = TransformationsToolBox.epsilonClosure(steps(word), this);
@@ -739,11 +728,6 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 		return !steps(s, word).isEmpty();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see rationals.Acceptor#steps(java.util.List)
-	 */
 	@Override
 	public Set<State> steps(List<L> word) {
 		Set<State> s = TransformationsToolBox.epsilonClosure(initials(), this);
@@ -915,8 +899,7 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	/**
 	 * Enumerate all prefix of words of length lower or equal than i in this
 	 * automaton. This method takes exponential time and space to execute: <em>
-   * use with care !</em>
-	 * .
+	 * use with care !</em>.
 	 * 
 	 * @param i
 	 *            maximal length of words.
@@ -925,20 +908,13 @@ public class Automaton<L, Tr extends Transition<L>, T extends Builder<L, Tr, T>>
 	public Set<List<L>> enumerate(int ln) {
 		Set<List<L>> ret = new HashSet<>();
 		class EnumState {
-			/**
-			 * @param s
-			 * @param list
-			 */
 			public EnumState(State s, List<L> list) {
 				st = s;
 				word = new ArrayList<L>(list);
 			}
-
 			State st;
-
 			List<L> word;
-		}
-		;
+		};
 		LinkedList<EnumState> ll = new LinkedList<EnumState>();
 		List<L> cur = new ArrayList<>();
 		for (Iterator<State> i = initials.iterator(); i.hasNext();) {

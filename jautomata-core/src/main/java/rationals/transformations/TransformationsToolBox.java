@@ -25,9 +25,6 @@ import java.util.*;
 
 /**
  * A set of utility methods used in transformations of automaton.
- * 
- * @author nono
- * @version $Id: TransformationsToolBox.java 10 2007-05-30 17:25:00Z oqube $
  */
 public class TransformationsToolBox {
 
