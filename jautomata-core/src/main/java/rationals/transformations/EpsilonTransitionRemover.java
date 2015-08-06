@@ -38,11 +38,7 @@ public class EpsilonTransitionRemover<L, Tr extends Transition<L>, T extends Bui
 	
 	protected final ModelCheck<L, Tr, T> m = new ModelCheck<>();
 	
-    /*
-     * (non-Javadoc)
-     * 
-     * @see rationals.transformations.UnaryTransformation#transform(rationals.Automaton)
-     */
+    @Override
     public Automaton<L, Tr, T> transform(Automaton<L, Tr, T> a) {
         Automaton<L, Tr, T> ret = new Automaton<>(); /* resulting automaton */
         Map<Set<State>, State> sm = new HashMap<>();
